@@ -22,15 +22,19 @@ public class TempClient {
             Socket conn1 = new Socket(server, 12244);
             Socket conn2 = new Socket(server, 12244);
 
-            ObjectOutputStream output = new ObjectOutputStream(conn.getOutputStream());
-            ObjectOutputStream output1 = new ObjectOutputStream(conn1.getOutputStream());
-            ObjectOutputStream output2 = new ObjectOutputStream(conn2.getOutputStream());
+            ObjectOutputStream output = 
+                    new ObjectOutputStream(conn.getOutputStream());
+            ObjectOutputStream output1 = 
+                    new ObjectOutputStream(conn1.getOutputStream());
+            ObjectOutputStream output2 = 
+                    new ObjectOutputStream(conn2.getOutputStream());
 
-            output.writeObject("GET");
+            output.writeObject("GET /patients");
             output1.writeObject("PUT");
             output2.writeObject("exit");
 
-            ObjectInputStream input = new ObjectInputStream(conn.getInputStream());
+            ObjectInputStream input = 
+                    new ObjectInputStream(conn.getInputStream());
 
             ArrayList<Patient> received = (ArrayList<Patient>) input.readObject();
 
@@ -59,7 +63,8 @@ public class TempClient {
         } catch (IOException e) {
             System.out.println("Erro de Entrada/Saída.");
         } catch (ClassNotFoundException ex) {
-            System.out.println("Classe ArrayList ou classe Patient não foi encontrada.");
+            System.out.println("Classe ArrayList ou classe Patient não foi "
+                    + "encontrada.");
         }
     }
 }
