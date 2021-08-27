@@ -77,19 +77,28 @@ public final class IdGenerate {
      * Verifica se o identificador já está em uso.
      *
      * @param id String - Identificador que se deseja verificar.
-     * @return
+     * @return boolean
      */
     private boolean verifyId(String id) {
         if (!this.generatedIds.isEmpty()) {
             for (int i = 0; i < this.generatedIds.size(); i++) {
                 if (this.generatedIds.get(i).equals(id)) {
                     System.out.println("Não devia ter entrado. " + id);
-                    
+
                     return false;
                 }
             }
         }
 
         return true;
+    }
+
+    /**
+     * Retorna uma lista contendo o todos os identificadores criados.
+     *
+     * @return ArrayList<String>
+     */
+    public ArrayList<String> list() {
+        return this.generatedIds;
     }
 }
