@@ -51,7 +51,12 @@ public class Server {
 
                     break;
                 } else {
-                    Server.processRequests(received, connection, patients, medicalRecordNumbers);
+                    Server.processRequests(
+                            received,
+                            connection,
+                            patients,
+                            medicalRecordNumbers
+                    );
                 }
                 input.close(); //Talvez criar método.
 
@@ -79,7 +84,10 @@ public class Server {
      * @param patients ArrayList<Patient> - Lista na qual os pacientes serão
      * @param idGen IdGenerate - Gerador de identificadores.
      */
-    private static void createPatients(ArrayList<Patient> patients, IdGenerate idGen) {
+    private static void createPatients(
+            ArrayList<Patient> patients,
+            IdGenerate idGen
+    ) {
         /* Criando e adicionando 10 pacientes na lista de pacientes. */
         patients.add(new Patient("Carlos", idGen));
         patients.add(new Patient("Manuela", idGen));
@@ -101,7 +109,10 @@ public class Server {
      * @param idGen - Gerador de identificadores utilizado para a criação dos
      * pacientes.
      */
-    private static void saveMedicalRecordNumbersList(ArrayList<String> medicalRecordNumbersList, IdGenerate idGen) {
+    private static void saveMedicalRecordNumbersList(
+            ArrayList<String> medicalRecordNumbersList,
+            IdGenerate idGen
+    ) {
         medicalRecordNumbersList.addAll(idGen.list());
     }
 
@@ -136,9 +147,13 @@ public class Server {
                     /* Envia a lista com o número da ficha médica dos pacientes
                         para o Client. */
                     case "/patients/medical-record-numbers":
-                        System.out.println("> Enviando o número da ficha médica dos pacientes");
+                        System.out.println("> Enviando o número da ficha "
+                                + "médica dos pacientes");
 
-                        Server.sendMedicalRecordNumbersList(connection, medicalRecordNumbers);
+                        Server.sendMedicalRecordNumbersList(
+                                connection,
+                                medicalRecordNumbers
+                        );
                 }
 
                 break;
@@ -174,7 +189,8 @@ public class Server {
         try {
             connection.close();
         } catch (IOException ex) {
-            System.out.println("Erro ao tentar finalizar a conexão com o Client.");
+            System.out.println("Erro ao tentar finalizar a conexão com o "
+                    + "Client.");
         }
     }
 
@@ -184,7 +200,10 @@ public class Server {
      * @param connection Socket - Conexão que é realizada com o Client.
      * @param server ServerSocket - Servidor que será finalizado
      */
-    private static void closeAllConnections(Socket connection, ServerSocket server) {
+    private static void closeAllConnections(
+            Socket connection, 
+            ServerSocket server
+    ) {
         Server.closeClientConnection(connection);
         Server.closeServer(server);
     }
@@ -195,15 +214,20 @@ public class Server {
      * @param connection Socket- Conexão que é realizada com o Client.
      * @param patients ArrayList<Patient> - Lista de pacientes.
      */
-    private static void sendPatientList(Socket connection, ArrayList<Patient> patients) {
+    private static void sendPatientList(
+            Socket connection, 
+            ArrayList<Patient> patients
+    ) {
         try {
-            ObjectOutputStream output = new ObjectOutputStream(connection.getOutputStream());
+            ObjectOutputStream output = 
+                    new ObjectOutputStream(connection.getOutputStream());
 
             output.writeObject(patients);
 
             output.close(); //Talvez criar método.
         } catch (IOException ex) {
-            System.out.println("Erro ao tentar enviar a lista de pacientes para o Client.");
+            System.out.println("Erro ao tentar enviar a lista de pacientes "
+                    + "para o Client.");
         }
     }
 
@@ -214,9 +238,13 @@ public class Server {
      * @param medicalRecordNumbers ArrayList<String> - Lista que contém o número
      * da ficha médica dos pacientes.
      */
-    private static void sendMedicalRecordNumbersList(Socket connection, ArrayList<String> medicalRecordNumbers) {
+    private static void sendMedicalRecordNumbersList(
+            Socket connection,
+            ArrayList<String> medicalRecordNumbers
+    ) {
         try {
-            ObjectOutputStream output = new ObjectOutputStream(connection.getOutputStream());
+            ObjectOutputStream output = 
+                    new ObjectOutputStream(connection.getOutputStream());
 
             output.writeObject(medicalRecordNumbers);
 
