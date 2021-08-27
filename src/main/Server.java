@@ -19,13 +19,18 @@ public class Server {
     public static void main(String[] args) {
 
         ArrayList<Patient> patients = new ArrayList<>();
+        ArrayList<String> medicalRecordNumbersList = new ArrayList<>();
+        IdGenerate idGen = new IdGenerate(12, ".");
 
         System.out.println("> Iniciando o servidor...");
         System.out.println("> Criando os pacientes...");
 
         /* Criando os pacientes */
-        Server.createPatients(patients);
-
+        Server.createPatients(patients, idGen);
+        
+        /* Salvando os números das fichas médicas dos pacientes em uma lista. */
+        Server.saveMedicalRecordNumbersList(medicalRecordNumbersList, idGen);
+        
         try {
             /* Definindo a porta do servidor. */
             ServerSocket server = new ServerSocket(12244);
@@ -71,12 +76,11 @@ public class Server {
     /**
      * Cria e adiciona os pacientes em uma lista.
      *
-     * @param patients - Lista na qual os pacientes serão
+     * @param patients ArrayList<Patient> - Lista na qual os pacientes serão
+     * @param idGen IdGenerate - Gerador de identificadores.
      */
-    private static void createPatients(ArrayList<Patient> patients) {
-        IdGenerate idGen = new IdGenerate(12, ".");
-
-        /* Criando e adicionando 10 pacientes. */
+    private static void createPatients(ArrayList<Patient> patients, IdGenerate idGen) {
+        /* Criando e adicionando 10 pacientes na lista de pacientes. */
         patients.add(new Patient("Carlos", idGen));
         patients.add(new Patient("Manuela", idGen));
         patients.add(new Patient("Isaac", idGen));
@@ -87,6 +91,18 @@ public class Server {
         patients.add(new Patient("Maite", idGen));
         patients.add(new Patient("Anthony", idGen));
         patients.add(new Patient("Cecília", idGen));
+    }
+    
+    /**
+     * Salva o número da ficha médica de todos os pacientes em uma lista.
+     * 
+     * @param medicalRecordNumbersList ArrayList<String> - Lista que irá 
+     * armazenar os números das fichas médicas.
+     * @param idGen - Gerador de identificadores utilizado para a criação dos
+     * pacientes.
+     */
+    private static void saveMedicalRecordNumbersList(ArrayList<String> medicalRecordNumbersList, IdGenerate idGen) {
+        medicalRecordNumbersList.addAll(idGen.list());
     }
 
     /**
