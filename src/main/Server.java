@@ -19,7 +19,7 @@ public class Server {
     public static void main(String[] args) {
 
         ArrayList<Patient> patients = new ArrayList<>();
-        ArrayList<String> medicalRecordNumbersList = new ArrayList<>();
+        ArrayList<String> medicalRecordNumbers = new ArrayList<>();
         IdGenerate idGen = new IdGenerate(12, ".");
 
         System.out.println("> Iniciando o servidor...");
@@ -27,10 +27,10 @@ public class Server {
 
         /* Criando os pacientes */
         Server.createPatients(patients, idGen);
-        
+
         /* Salvando os números das fichas médicas dos pacientes em uma lista. */
-        Server.saveMedicalRecordNumbersList(medicalRecordNumbersList, idGen);
-        
+        Server.saveMedicalRecordNumbersList(medicalRecordNumbers, idGen);
+
         try {
             /* Definindo a porta do servidor. */
             ServerSocket server = new ServerSocket(12244);
@@ -47,11 +47,11 @@ public class Server {
                 received = (String) input.readObject();
 
                 if (received.equals("exit")) {
-                    System.out.println("> Encerrano servidor...");
+                    System.out.println("> Encerrando o servidor...");
 
                     break;
                 } else {
-                    Server.processRequests(received, connection, patients);
+                    Server.processRequests(received, connection, patients, medicalRecordNumbers);
                 }
                 input.close(); //Talvez criar método.
 
@@ -92,11 +92,11 @@ public class Server {
         patients.add(new Patient("Anthony", idGen));
         patients.add(new Patient("Cecília", idGen));
     }
-    
+
     /**
      * Salva o número da ficha médica de todos os pacientes em uma lista.
-     * 
-     * @param medicalRecordNumbersList ArrayList<String> - Lista que irá 
+     *
+     * @param medicalRecordNumbersList ArrayList<String> - Lista que irá
      * armazenar os números das fichas médicas.
      * @param idGen - Gerador de identificadores utilizado para a criação dos
      * pacientes.
@@ -108,15 +108,38 @@ public class Server {
     /**
      * Processa as requisições que são feitas ao servidor.
      *
-     * @param method String - Método HTTP enviado pelo Client.
+     * @param httpRequest String - Método HTTP enviado pelo Client.
      */
-    private static void processRequests(String method, Socket connection, ArrayList<Patient> patients) {
+    private static void processRequests(
+            String httpRequest,
+            Socket connection,
+            ArrayList<Patient> patients,
+            ArrayList<String> medicalRecordNumbers
+    ) {
         System.out.println("> Processando a requisição...");
-        switch (method) {
-            case "GET": //Envia a lista de pacientes para o Client.
+
+        String[] requestLine = httpRequest.split(" ");
+
+        switch (requestLine[0]) {
+            case "GET":
                 System.out.println("Método GET");
-                
-                Server.sendPatientList(connection, patients);
+                System.out.println("Rota: " + requestLine[1]);
+
+                switch (requestLine[1]) {
+                    /* Envia a lista de pacientes para o Client. */
+                    case "/patients":
+                        System.out.println("> Enviando lista de pacientes");
+
+                        Server.sendPatientList(connection, patients);
+
+                        break;
+                    /* Envia a lista com o número da ficha médica dos pacientes
+                        para o Client. */
+                    case "/patients/medical-record-numbers":
+                        System.out.println("> Enviando o número da ficha médica dos pacientes");
+
+                        Server.sendMedicalRecordNumbersList(connection, medicalRecordNumbers);
+                }
 
                 break;
             case "POST": //Não sei se precisa.
@@ -170,6 +193,7 @@ public class Server {
      * Envia a lista de pacientes para o Client.
      *
      * @param connection Socket- Conexão que é realizada com o Client.
+     * @param patients ArrayList<Patient> - Lista de pacientes.
      */
     private static void sendPatientList(Socket connection, ArrayList<Patient> patients) {
         try {
@@ -181,6 +205,25 @@ public class Server {
         } catch (IOException ex) {
             System.out.println("Erro ao tentar enviar a lista de pacientes para o Client.");
         }
+    }
 
+    /**
+     * Envia uma lista com o número da ficha médica dos pacientes para o Client.
+     *
+     * @param connection Socket- Conexão que é realizada com o Client.
+     * @param medicalRecordNumbers ArrayList<String> - Lista que contém o número
+     * da ficha médica dos pacientes.
+     */
+    private static void sendMedicalRecordNumbersList(Socket connection, ArrayList<String> medicalRecordNumbers) {
+        try {
+            ObjectOutputStream output = new ObjectOutputStream(connection.getOutputStream());
+
+            output.writeObject(medicalRecordNumbers);
+
+            output.close(); //Talvez criar método.
+        } catch (IOException e) {
+            System.out.println("Erro ao tentar enviar a lista com o número da "
+                    + "ficha médica dos pacientes para o Client.");
+        }
     }
 }
