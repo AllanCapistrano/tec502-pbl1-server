@@ -15,6 +15,8 @@ import models.Patient;
  */
 public class Server {
     
+    private static final int PORT = 12244;
+    private static ServerSocket server;
     private static final ArrayList<Patient> patients = new ArrayList<>();
     private static final ArrayList<String> medicalRecordNumbers = new ArrayList<>();
 
@@ -27,14 +29,14 @@ public class Server {
 
         try {
             /* Definindo a porta do servidor. */
-            ServerSocket server = new ServerSocket(12244);
+            Server.server = new ServerSocket(Server.PORT);
             Socket connection;
             String received;
             ObjectInputStream input;
 
             while (true) {
                 /* Permite a conexão com o servidor. */
-                connection = server.accept();
+                connection = Server.server.accept();
 
                 input = new ObjectInputStream(connection.getInputStream());
 
@@ -58,16 +60,24 @@ public class Server {
             }
 
             /* Finalizando as conexões. */
-            Server.closeAllConnections(connection, server);
+            Server.closeAllConnections(connection, Server.server);
 
             System.out.println("> Servidor finalizado!");
         } catch (BindException e) {
+            closeServer(Server.server);
+            
             System.out.println("A porta já está em uso.");
         } catch (IOException e) {
+            closeServer(Server.server);
+            
             System.out.println("Erro de Entrada/Saída.");
         } catch (ClassNotFoundException ex) {
+            closeServer(Server.server);
+            
             System.out.println("Classe String não foi encontrada.");
         }
+        
+        closeServer(Server.server);
     }
 
     /**
