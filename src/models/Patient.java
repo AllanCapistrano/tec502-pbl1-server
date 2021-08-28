@@ -1,7 +1,6 @@
 package models;
 
 import java.io.Serializable;
-import utils.IdGenerate;
 
 /**
  * Classe do paciente.
@@ -26,34 +25,34 @@ public class Patient implements Serializable {
      * respiratória registrada pelo sensor.
      * @param oxygenationOfTheBlood float - Nível do oxigênio no sangue
      * registrado pelo sensor.
-     * @param id IdGenerate - Gerador de id.
+     * @param medicalRecordNumber String - Número da ficha médica do paciente.
      */
     public Patient(
             String name,
             float bodyTemperatureSensor,
             float respiratoryFrequencySensor,
             float oxygenationOfTheBlood,
-            IdGenerate id
+            String medicalRecordNumber
     ) {
         this.name = name;
         this.bodyTemperatureSensor = bodyTemperatureSensor;
         this.respiratoryFrequencySensor = respiratoryFrequencySensor;
         this.oxygenationOfTheBlood = oxygenationOfTheBlood;
-        this.medicalRecordNumber = id.generate();
+        this.medicalRecordNumber = medicalRecordNumber;
     }
 
     /**
      * Método construtor.
      *
      * @param name String - Nome do paciente.
-     * @param id IdGenerate - Gerador de id.
+     * @param medicalRecordNumber String - Número da ficha médica do paciente.
      */
     public Patient(
             String name,
-            IdGenerate id
+            String medicalRecordNumber
     ) {
         this.name = name;
-        this.medicalRecordNumber = id.generate();
+        this.medicalRecordNumber = medicalRecordNumber;
     }
 
     public String getName() {

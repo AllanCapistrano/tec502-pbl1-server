@@ -8,7 +8,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import models.Patient;
-import utils.IdGenerate;
 
 /**
  *
@@ -20,16 +19,11 @@ public class Server {
 
         ArrayList<Patient> patients = new ArrayList<>();
         ArrayList<String> medicalRecordNumbers = new ArrayList<>();
-        IdGenerate idGen = new IdGenerate(12, ".");
 
         System.out.println("> Iniciando o servidor...");
-        System.out.println("> Criando os pacientes...");
-
-        /* Criando os pacientes */
-        Server.createPatients(patients, idGen);
 
         /* Salvando os números das fichas médicas dos pacientes em uma lista. */
-        Server.saveMedicalRecordNumbersList(medicalRecordNumbers, idGen);
+        Server.saveMedicalRecordNumbersList(medicalRecordNumbers);
 
         try {
             /* Definindo a porta do servidor. */
@@ -79,41 +73,15 @@ public class Server {
     }
 
     /**
-     * Cria e adiciona os pacientes em uma lista.
-     *
-     * @param patients ArrayList<Patient> - Lista na qual os pacientes serão
-     * @param idGen IdGenerate - Gerador de identificadores.
-     */
-    private static void createPatients(
-            ArrayList<Patient> patients,
-            IdGenerate idGen
-    ) {
-        /* Criando e adicionando 10 pacientes na lista de pacientes. */
-        patients.add(new Patient("Carlos", idGen));
-        patients.add(new Patient("Manuela", idGen));
-        patients.add(new Patient("Isaac", idGen));
-        patients.add(new Patient("Lorena", idGen));
-        patients.add(new Patient("Heitor", idGen));
-        patients.add(new Patient("Maria Eduarda", idGen));
-        patients.add(new Patient("Davi", idGen));
-        patients.add(new Patient("Maite", idGen));
-        patients.add(new Patient("Anthony", idGen));
-        patients.add(new Patient("Cecília", idGen));
-    }
-
-    /**
      * Salva o número da ficha médica de todos os pacientes em uma lista.
      *
      * @param medicalRecordNumbersList ArrayList<String> - Lista que irá
      * armazenar os números das fichas médicas.
-     * @param idGen - Gerador de identificadores utilizado para a criação dos
-     * pacientes.
      */
     private static void saveMedicalRecordNumbersList(
-            ArrayList<String> medicalRecordNumbersList,
-            IdGenerate idGen
+            ArrayList<String> medicalRecordNumbersList
     ) {
-        medicalRecordNumbersList.addAll(idGen.list());
+        // To Do
     }
 
     /**
@@ -130,7 +98,7 @@ public class Server {
         System.out.println("> Processando a requisição...");
 
         String[] requestLine = httpRequest.split(" ");
-
+        
         switch (requestLine[0]) {
             case "GET":
                 System.out.println("Método GET");
@@ -159,6 +127,15 @@ public class Server {
                 break;
             case "POST": //Não sei se precisa.
                 System.out.println("Método POST");
+                System.out.println("Rota: " + requestLine[1]);
+                
+                if (requestLine[1].contains("patients/create/")) {
+                    String[] temp = requestLine[1].split("/");
+                    
+                    System.out.println("id: " + temp[2]);
+                    
+                }
+                
                 break;
             case "PUT": //Altera os valores do sensor de um paciente.
                 System.out.println("Método PUT");
