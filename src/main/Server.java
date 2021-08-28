@@ -22,7 +22,7 @@ public class Server {
 
     public static void main(String[] args) {
         
-        System.out.println("> Iniciando o servidor...");
+        System.out.println("> Iniciando o servidor");
 
         /* Salvando os números das fichas médicas dos pacientes em uma lista. */
         Server.saveMedicalRecordNumbersList(Server.medicalRecordNumbers);
@@ -43,7 +43,7 @@ public class Server {
                 received = (String) input.readObject();
 
                 if (received.equals("exit")) {
-                    System.out.println("> Encerrando o servidor...");
+                    System.out.println("> Encerrando o servidor");
 
                     break;
                 } else {
@@ -102,7 +102,7 @@ public class Server {
             String httpRequest,
             Socket connection
     ) {
-        System.out.println("> Processando a requisição...");
+        System.out.println("> Processando a requisição");
 
         String[] requestLine = httpRequest.split(" ");
         
