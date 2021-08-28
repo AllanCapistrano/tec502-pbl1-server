@@ -14,16 +14,16 @@ import models.Patient;
  * @author Allan Capistrano
  */
 public class Server {
+    
+    private static final ArrayList<Patient> patients = new ArrayList<>();
+    private static final ArrayList<String> medicalRecordNumbers = new ArrayList<>();
 
     public static void main(String[] args) {
-
-        ArrayList<Patient> patients = new ArrayList<>();
-        ArrayList<String> medicalRecordNumbers = new ArrayList<>();
-
+        
         System.out.println("> Iniciando o servidor...");
 
         /* Salvando os números das fichas médicas dos pacientes em uma lista. */
-        Server.saveMedicalRecordNumbersList(medicalRecordNumbers);
+        Server.saveMedicalRecordNumbersList(Server.medicalRecordNumbers);
 
         try {
             /* Definindo a porta do servidor. */
@@ -47,9 +47,7 @@ public class Server {
                 } else {
                     Server.processRequests(
                             received,
-                            connection,
-                            patients,
-                            medicalRecordNumbers
+                            connection
                     );
                 }
                 input.close(); //Talvez criar método.
@@ -83,17 +81,16 @@ public class Server {
     ) {
         // To Do
     }
-
+    
     /**
      * Processa as requisições que são feitas ao servidor.
-     *
+     * 
      * @param httpRequest String - Método HTTP enviado pelo Client.
+     * @param connection Socket - Conexão com o Client.
      */
     private static void processRequests(
             String httpRequest,
-            Socket connection,
-            ArrayList<Patient> patients,
-            ArrayList<String> medicalRecordNumbers
+            Socket connection
     ) {
         System.out.println("> Processando a requisição...");
 
@@ -109,10 +106,10 @@ public class Server {
                     case "/patients":
                         System.out.println("> Enviando lista de pacientes");
 
-                        Server.sendPatientList(connection, patients);
+                        Server.sendPatientList(connection, Server.patients);
 
                         break;
-                    /* Envia a lista com o número da ficha médica dos pacientes
+                    /* Envia a lista com o número da ficha médica dos pacientes 
                         para o Client. */
                     case "/patients/medical-record-numbers":
                         System.out.println("> Enviando o número da ficha "
@@ -120,12 +117,12 @@ public class Server {
 
                         Server.sendMedicalRecordNumbersList(
                                 connection,
-                                medicalRecordNumbers
+                                Server.medicalRecordNumbers
                         );
                 }
 
                 break;
-            case "POST": //Não sei se precisa.
+            case "POST":
                 System.out.println("Método POST");
                 System.out.println("Rota: " + requestLine[1]);
                 
