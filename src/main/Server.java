@@ -8,6 +8,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import models.Patient;
+import org.json.JSONObject;
 
 /**
  *
@@ -31,7 +32,7 @@ public class Server {
             /* Definindo a porta do servidor. */
             Server.server = new ServerSocket(Server.PORT);
             Socket connection;
-            String received;
+            JSONObject received;
             ObjectInputStream input;
 
             while (true) {
@@ -40,9 +41,9 @@ public class Server {
 
                 input = new ObjectInputStream(connection.getInputStream());
 
-                received = (String) input.readObject();
-
-                if (received.equals("exit")) {
+                received = (JSONObject) input.readObject();
+                
+                if (received.has("exit") && received.getBoolean("exit")) {
                     System.out.println("> Encerrando o servidor");
 
                     break;
@@ -99,19 +100,19 @@ public class Server {
      * @param connection Socket - Conexão com o Client.
      */
     private static void processRequests(
-            String httpRequest,
+            JSONObject httpRequest,
             Socket connection
     ) {
         System.out.println("> Processando a requisição");
 
-        String[] requestLine = httpRequest.split(" ");
+        System.out.println(httpRequest);
         
-        switch (requestLine[0]) {
+        switch (httpRequest.getString("method")) {
             case "GET":
                 System.out.println("Método GET");
-                System.out.println("Rota: " + requestLine[1]);
+                System.out.println("Rota: " + httpRequest.getString("route"));
 
-                switch (requestLine[1]) {
+                switch (httpRequest.getString("route")) {
                     /* Envia a lista de pacientes para o Client. */
                     case "/patients":
                         System.out.println("> Enviando lista de pacientes");
@@ -134,10 +135,10 @@ public class Server {
                 break;
             case "POST":
                 System.out.println("Método POST");
-                System.out.println("Rota: " + requestLine[1]);
+                System.out.println("Rota: " + httpRequest.getString("route"));
                 
-                if (requestLine[1].contains("patients/create/")) {
-                    String[] temp = requestLine[1].split("/");
+                if (httpRequest.getString("route").contains("patients/create/")) {
+                    String[] temp = httpRequest.getString("route").split("/");
                     
                     System.out.println("id: " + temp[2]);
                     
