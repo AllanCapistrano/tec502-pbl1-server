@@ -15,14 +15,14 @@ import org.json.JSONObject;
  * @author Allan Capistrano
  */
 public class Server {
-    
+
     private static final int PORT = 12244;
     private static ServerSocket server;
     private static final ArrayList<Patient> patients = new ArrayList<>();
     private static final ArrayList<String> medicalRecordNumbers = new ArrayList<>();
 
     public static void main(String[] args) {
-        
+
         System.out.println("> Iniciando o servidor");
 
         try {
@@ -39,7 +39,7 @@ public class Server {
                 input = new ObjectInputStream(connection.getInputStream());
 
                 received = (JSONObject) input.readObject();
-                
+
                 if (received.has("exit") && received.getBoolean("exit")) {
                     System.out.println("> Encerrando o servidor");
 
@@ -51,10 +51,15 @@ public class Server {
                     );
                 }
                 input.close(); //Talvez criar método.
-                
-                System.out.println(patients.get(0).getName());
-                System.out.println(patients.get(0).getRespiratoryFrequency());
-                System.out.println(patients.get(0).getBloodOxygenation());
+
+                System.out.println("Qtd: " + Server.patients.size());
+
+                System.out.println("Nome: " + Server.patients.get(0).getName());
+                System.out.println("Temparatura corporal: " + Server.patients.get(0).getBodyTemperature());
+                System.out.println("Frequência respiratória: " + Server.patients.get(0).getRespiratoryFrequency());
+                System.out.println("Oxigenação do sangue: " + Server.patients.get(0).getBloodOxygenation());
+                System.out.println("Pressão arterial: " + Server.patients.get(0).getBloodPressure());
+                System.out.println("Frequência cardíaca: " + Server.patients.get(0).getHeartRate());
 
                 /* Finalizando a conexão com o Client. */
                 Server.closeClientConnection(connection);
@@ -66,18 +71,18 @@ public class Server {
             System.out.println("> Servidor finalizado!");
         } catch (BindException e) {
             closeServer(Server.server);
-            
+
             System.out.println("A porta já está em uso.");
         } catch (IOException e) {
             closeServer(Server.server);
-            
+
             System.out.println("Erro de Entrada/Saída.");
         } catch (ClassNotFoundException ex) {
             closeServer(Server.server);
-            
+
             System.out.println("Classe String não foi encontrada.");
         }
-        
+
         closeServer(Server.server);
     }
 
@@ -89,21 +94,21 @@ public class Server {
      */
     private static void addPatient(JSONObject patient, String id) {
         Patient temp = new Patient(
-                patient.getString("name"), 
-                patient.getFloat("bodyTemperatureSensor"), 
+                patient.getString("name"),
+                patient.getFloat("bodyTemperatureSensor"),
                 patient.getFloat("respiratoryFrequencySensor"),
                 patient.getFloat("bloodOxygenationSensor"),
                 patient.getFloat("bloodPressureSensor"),
                 patient.getFloat("heartRateSensor"),
                 id
         );
-        
+
         Server.patients.add(temp);
     }
-    
+
     /**
      * Processa as requisições que são feitas ao servidor.
-     * 
+     *
      * @param httpRequest String - Método HTTP enviado pelo Client.
      * @param connection Socket - Conexão com o Client.
      */
@@ -114,7 +119,7 @@ public class Server {
         System.out.println("> Processando a requisição");
 
         System.out.println(httpRequest);
-        
+
         switch (httpRequest.getString("method")) {
             case "GET":
                 System.out.println("\tMétodo GET");
@@ -144,34 +149,24 @@ public class Server {
             case "POST": // Cria e adiciona o dispositivo do pacinte na lista.
                 System.out.println("\tMétodo POST");
                 System.out.println("\t\tRota: " + httpRequest.getString("route"));
-                
+
                 if (httpRequest.getString("route").contains("patients/create/")) {
                     String[] temp = httpRequest.getString("route").split("/");
-                    
+
                     Server.addPatient(httpRequest.getJSONObject("body"), temp[2]);
                 }
-                
+
                 break;
             case "PUT": // Altera os valores do sensor de um paciente.
                 System.out.println("\tMétodo PUT");
                 System.out.println("\t\tRota: " + httpRequest.getString("route"));
-                
-                if (httpRequest.getString("route").contains("patients/create/")) {
+
+                if (httpRequest.getString("route").contains("patients/edit/")) {
                     String[] temp = httpRequest.getString("route").split("/");
-                    
-                    for (int i = 0; i < Server.patients.size(); i++) {
-                        Patient temporaryPatient = Server.patients.get(i);
-                        
-                        if (temporaryPatient.getMedicalRecordNumber().equals(temp[2])) {
-                            temporaryPatient.setBodyTemperature(httpRequest.getFloat("bodyTemperatureSensor"));
-                            temporaryPatient.setRespiratoryFrequency(httpRequest.getFloat("respiratoryFrequencySensor"));
-                            temporaryPatient.setBloodOxygenation(httpRequest.getFloat("bloodOxygenationSensor"));
-                            temporaryPatient.setBloodPressure(httpRequest.getFloat("bloodPressureSensor"));
-                            temporaryPatient.setHeartRate(httpRequest.getFloat("heartRateSensor"));
-                        }
-                    }
+
+                    Server.updatePatient(temp[2], httpRequest.getJSONObject("body"));
                 }
-                
+
                 break;
         }
         System.out.println("");
@@ -211,7 +206,7 @@ public class Server {
      * @param server ServerSocket - Servidor que será finalizado
      */
     private static void closeAllConnections(
-            Socket connection, 
+            Socket connection,
             ServerSocket server
     ) {
         Server.closeClientConnection(connection);
@@ -225,12 +220,12 @@ public class Server {
      * @param patients ArrayList<Patient> - Lista de pacientes.
      */
     private static void sendPatientList(
-            Socket connection, 
+            Socket connection,
             ArrayList<Patient> patients
     ) {
         try {
-            ObjectOutputStream output = 
-                    new ObjectOutputStream(connection.getOutputStream());
+            ObjectOutputStream output
+                    = new ObjectOutputStream(connection.getOutputStream());
 
             output.writeObject(patients);
 
@@ -253,8 +248,8 @@ public class Server {
             ArrayList<String> medicalRecordNumbers
     ) {
         try {
-            ObjectOutputStream output = 
-                    new ObjectOutputStream(connection.getOutputStream());
+            ObjectOutputStream output
+                    = new ObjectOutputStream(connection.getOutputStream());
 
             output.writeObject(medicalRecordNumbers);
 
@@ -262,6 +257,34 @@ public class Server {
         } catch (IOException e) {
             System.out.println("Erro ao tentar enviar a lista com o número da "
                     + "ficha médica dos pacientes para o Client.");
+        }
+    }
+
+    /**
+     * Altera os dados dos sensores de um paciente.
+     * 
+     * @param id String - Identificador único do paciente.
+     * @param jsonInfo JSONObject - Novos dados.
+     */
+    private static void updatePatient(String id, JSONObject jsonInfo) {
+        for (int i = 0; i < Server.patients.size(); i++) {
+            if (Server.patients.get(i).getMedicalRecordNumber().equals(id)) {
+                Server.patients.get(i).setBodyTemperature(
+                        jsonInfo.getFloat("bodyTemperatureSensor")
+                );
+                Server.patients.get(i).setRespiratoryFrequency(
+                        jsonInfo.getFloat("respiratoryFrequencySensor")
+                );
+                Server.patients.get(i).setBloodOxygenation(
+                        jsonInfo.getFloat("bloodOxygenationSensor")
+                );
+                Server.patients.get(i).setBloodPressure(
+                        jsonInfo.getFloat("bloodPressureSensor")
+                );
+                Server.patients.get(i).setHeartRate(
+                        jsonInfo.getFloat("heartRateSensor")
+                );
+            }
         }
     }
 }
