@@ -52,14 +52,15 @@ public class Server {
                 }
                 input.close(); //Talvez criar método.
 
-                System.out.println("Qtd: " + Server.patients.size());
-
+                System.out.println("Qtd pacientes: " + Server.patients.size());
                 System.out.println("Nome: " + Server.patients.get(0).getName());
                 System.out.println("Temparatura corporal: " + Server.patients.get(0).getBodyTemperature());
                 System.out.println("Frequência respiratória: " + Server.patients.get(0).getRespiratoryFrequency());
                 System.out.println("Oxigenação do sangue: " + Server.patients.get(0).getBloodOxygenation());
                 System.out.println("Pressão arterial: " + Server.patients.get(0).getBloodPressure());
                 System.out.println("Frequência cardíaca: " + Server.patients.get(0).getHeartRate());
+                System.out.println("Está em estado grave? " + Server.patients.get(0).isIsSeriousCondition());
+                System.out.println("");
 
                 /* Finalizando a conexão com o Client. */
                 Server.closeClientConnection(connection);
@@ -283,6 +284,9 @@ public class Server {
                 );
                 Server.patients.get(i).setHeartRate(
                         jsonInfo.getFloat("heartRateSensor")
+                );
+                Server.patients.get(i).setIsSeriousCondition(
+                        Server.patients.get(i).checkPatientCondition()
                 );
             }
         }
