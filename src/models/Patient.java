@@ -128,12 +128,11 @@ public class Patient implements Serializable {
      * 
      * @return boolean
      */
-    private boolean checkPatientCondition() {
+    public boolean checkPatientCondition() {
         return (this.bodyTemperature > (float) 38.6)
                 || (this.respiratoryFrequency >= (float) 21)
                 || (this.bloodOxygenation < (float) 96)
                 || (this.bloodPressure >= (float) 71)
                 || (this.heartRate >= (float) 111);
     }
-
 }
