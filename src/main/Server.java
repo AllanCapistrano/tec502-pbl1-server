@@ -270,6 +270,9 @@ public class Server {
     private static void updatePatient(String id, JSONObject jsonInfo) {
         for (int i = 0; i < Server.patients.size(); i++) {
             if (Server.patients.get(i).getMedicalRecordNumber().equals(id)) {
+                Server.patients.get(i).setName(
+                        jsonInfo.getString("name")
+                );
                 Server.patients.get(i).setBodyTemperature(
                         jsonInfo.getFloat("bodyTemperatureSensor")
                 );
