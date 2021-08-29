@@ -51,10 +51,13 @@ public class Server {
                     );
                 }
                 input.close(); //Talvez criar método.
+                
+                System.out.println(patients.get(0).getName());
+                System.out.println(patients.get(0).getRespiratoryFrequency());
+                System.out.println(patients.get(0).getBloodOxygenation());
 
                 /* Finalizando a conexão com o Client. */
                 Server.closeClientConnection(connection);
-
             }
 
             /* Finalizando as conexões. */
@@ -138,20 +141,37 @@ public class Server {
                 }
 
                 break;
-            case "POST":
+            case "POST": // Cria e adiciona o dispositivo do pacinte na lista.
                 System.out.println("\tMétodo POST");
                 System.out.println("\t\tRota: " + httpRequest.getString("route"));
                 
                 if (httpRequest.getString("route").contains("patients/create/")) {
                     String[] temp = httpRequest.getString("route").split("/");
                     
-                    System.out.println("id: " + temp[2]);
-                    
+                    Server.addPatient(httpRequest.getJSONObject("body"), temp[2]);
                 }
                 
                 break;
-            case "PUT": //Altera os valores do sensor de um paciente.
+            case "PUT": // Altera os valores do sensor de um paciente.
                 System.out.println("\tMétodo PUT");
+                System.out.println("\t\tRota: " + httpRequest.getString("route"));
+                
+                if (httpRequest.getString("route").contains("patients/create/")) {
+                    String[] temp = httpRequest.getString("route").split("/");
+                    
+                    for (int i = 0; i < Server.patients.size(); i++) {
+                        Patient temporaryPatient = Server.patients.get(i);
+                        
+                        if (temporaryPatient.getMedicalRecordNumber().equals(temp[2])) {
+                            temporaryPatient.setBodyTemperature(httpRequest.getFloat("bodyTemperatureSensor"));
+                            temporaryPatient.setRespiratoryFrequency(httpRequest.getFloat("respiratoryFrequencySensor"));
+                            temporaryPatient.setBloodOxygenation(httpRequest.getFloat("bloodOxygenationSensor"));
+                            temporaryPatient.setBloodPressure(httpRequest.getFloat("bloodPressureSensor"));
+                            temporaryPatient.setHeartRate(httpRequest.getFloat("heartRateSensor"));
+                        }
+                    }
+                }
+                
                 break;
         }
         System.out.println("");
