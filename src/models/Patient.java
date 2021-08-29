@@ -12,10 +12,10 @@ public class Patient implements Serializable {
     private String name;
     private final String medicalRecordNumber;
     private float bodyTemperature;
-    private float respiratoryFrequency;
+    private int respiratoryFrequency;
     private float bloodOxygenation;
-    private float bloodPressure;
-    private float heartRate;
+    private int bloodPressure;
+    private int heartRate;
     private boolean isSeriousCondition;
 
     /**
@@ -24,21 +24,21 @@ public class Patient implements Serializable {
      * @param name String - Nome do paciente.
      * @param bodyTemperature float - Valor da temperatura corporal registrada
      * pelo sensor.
-     * @param respiratoryFrequency float - Valor da frequência respiratória
+     * @param respiratoryFrequency int - Valor da frequência respiratória
      * registrada pelo sensor.
      * @param bloodOxygenation float - Nível de oxigênio no sangue registrado
      * pelo sensor.
-     * @param bloodPressure float - Pressão arterial registrada pelo sensor.
-     * @param heartRate float - Frequência cardíaca registrada pelo sensor.
+     * @param bloodPressure int - Pressão arterial registrada pelo sensor.
+     * @param heartRate int - Frequência cardíaca registrada pelo sensor.
      * @param medicalRecordNumber String - Número da ficha médica do paciente.
      */
     public Patient(
             String name,
             float bodyTemperature,
-            float respiratoryFrequency,
+            int respiratoryFrequency,
             float bloodOxygenation,
-            float bloodPressure,
-            float heartRate,
+            int bloodPressure,
+            int heartRate,
             String medicalRecordNumber
     ) {
         this.name = name;
@@ -90,7 +90,7 @@ public class Patient implements Serializable {
         return respiratoryFrequency;
     }
 
-    public void setRespiratoryFrequency(float respiratoryFrequency) {
+    public void setRespiratoryFrequency(int respiratoryFrequency) {
         this.respiratoryFrequency = respiratoryFrequency;
     }
 
@@ -106,7 +106,7 @@ public class Patient implements Serializable {
         return heartRate;
     }
 
-    public void setHeartRate(float heartRate) {
+    public void setHeartRate(int heartRate) {
         this.heartRate = heartRate;
     }
 
@@ -114,7 +114,7 @@ public class Patient implements Serializable {
         return bloodPressure;
     }
 
-    public void setBloodPressure(float bloodPressure) {
+    public void setBloodPressure(int bloodPressure) {
         this.bloodPressure = bloodPressure;
     }
 
@@ -134,9 +134,9 @@ public class Patient implements Serializable {
      */
     public boolean checkPatientCondition() {
         return (this.bodyTemperature > (float) 38.6)
-                || (this.respiratoryFrequency >= (float) 21)
+                || (this.respiratoryFrequency >= 21)
                 || (this.bloodOxygenation < (float) 96)
-                || (this.bloodPressure >= (float) 71)
-                || (this.heartRate >= (float) 111);
+                || (this.bloodPressure >= 71)
+                || (this.heartRate >= 111);
     }
 }
