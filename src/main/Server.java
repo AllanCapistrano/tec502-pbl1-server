@@ -97,10 +97,10 @@ public class Server {
         Patient temp = new Patient(
                 patient.getString("name"),
                 patient.getFloat("bodyTemperatureSensor"),
-                patient.getFloat("respiratoryFrequencySensor"),
+                patient.getInt("respiratoryFrequencySensor"),
                 patient.getFloat("bloodOxygenationSensor"),
-                patient.getFloat("bloodPressureSensor"),
-                patient.getFloat("heartRateSensor"),
+                patient.getInt("bloodPressureSensor"),
+                patient.getInt("heartRateSensor"),
                 id
         );
 
@@ -274,16 +274,16 @@ public class Server {
                         jsonInfo.getFloat("bodyTemperatureSensor")
                 );
                 Server.patients.get(i).setRespiratoryFrequency(
-                        jsonInfo.getFloat("respiratoryFrequencySensor")
+                        jsonInfo.getInt("respiratoryFrequencySensor")
                 );
                 Server.patients.get(i).setBloodOxygenation(
                         jsonInfo.getFloat("bloodOxygenationSensor")
                 );
                 Server.patients.get(i).setBloodPressure(
-                        jsonInfo.getFloat("bloodPressureSensor")
+                        jsonInfo.getInt("bloodPressureSensor")
                 );
                 Server.patients.get(i).setHeartRate(
-                        jsonInfo.getFloat("heartRateSensor")
+                        jsonInfo.getInt("heartRateSensor")
                 );
                 Server.patients.get(i).setIsSeriousCondition(
                         Server.patients.get(i).checkPatientCondition()
