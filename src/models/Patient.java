@@ -131,8 +131,8 @@ public class Patient implements Serializable {
     private boolean checkPatientCondition() {
         return (this.bodyTemperature > (float) 38.6)
                 || (this.respiratoryFrequency >= (float) 21)
-                || (this.bloodPressure >= (float) 71)
                 || (this.bloodOxygenation < (float) 96)
+                || (this.bloodPressure >= (float) 71)
                 || (this.heartRate >= (float) 111);
     }
 
