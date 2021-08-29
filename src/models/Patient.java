@@ -13,7 +13,7 @@ public class Patient implements Serializable {
     private final String medicalRecordNumber;
     private float bodyTemperatureSensor;
     private float respiratoryFrequencySensor;
-    private float oxygenationOfTheBlood;
+    private float bloodOxygenationSensor;
 
     /**
      * Método construtor.
@@ -23,7 +23,7 @@ public class Patient implements Serializable {
      * registrada pelo sensor.
      * @param respiratoryFrequencySensor float - Valor da frequência
      * respiratória registrada pelo sensor.
-     * @param oxygenationOfTheBlood float - Nível do oxigênio no sangue
+     * @param bloodOxygenationSensor float - Nível do oxigênio no sangue
      * registrado pelo sensor.
      * @param medicalRecordNumber String - Número da ficha médica do paciente.
      */
@@ -31,13 +31,13 @@ public class Patient implements Serializable {
             String name,
             float bodyTemperatureSensor,
             float respiratoryFrequencySensor,
-            float oxygenationOfTheBlood,
+            float bloodOxygenationSensor,
             String medicalRecordNumber
     ) {
         this.name = name;
         this.bodyTemperatureSensor = bodyTemperatureSensor;
         this.respiratoryFrequencySensor = respiratoryFrequencySensor;
-        this.oxygenationOfTheBlood = oxygenationOfTheBlood;
+        this.bloodOxygenationSensor = bloodOxygenationSensor;
         this.medicalRecordNumber = medicalRecordNumber;
     }
 
@@ -83,12 +83,12 @@ public class Patient implements Serializable {
         this.respiratoryFrequencySensor = respiratoryFrequencySensor;
     }
 
-    public float getOxygenationOfTheBlood() {
-        return oxygenationOfTheBlood;
+    public float getbloodOxygenationSensor() {
+        return bloodOxygenationSensor;
     }
 
-    public void setOxygenationOfTheBlood(float oxygenationOfTheBlood) {
-        this.oxygenationOfTheBlood = oxygenationOfTheBlood;
+    public void setbloodOxygenationSensor(float bloodOxygenationSensor) {
+        this.bloodOxygenationSensor = bloodOxygenationSensor;
     }
 
 }
