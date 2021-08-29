@@ -122,6 +122,10 @@ public class Patient implements Serializable {
         return isSeriousCondition;
     }
     
+    public void setIsSeriousCondition(boolean isSeriousCondition) {
+        this.isSeriousCondition = isSeriousCondition;
+    }
+    
     /**
      * Verifica se o paciente está em um estado grave com base nos dados dos
      * sensores.
