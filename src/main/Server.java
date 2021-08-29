@@ -24,6 +24,7 @@ public class Server {
     public static void main(String[] args) {
 
         System.out.println("> Iniciando o servidor");
+        System.out.println("> Aguardando conexão");
 
         try {
             /* Definindo a porta do servidor. */
@@ -52,15 +53,7 @@ public class Server {
                 }
                 input.close(); //Talvez criar método.
 
-                System.out.println("Qtd pacientes: " + Server.patients.size());
-                System.out.println("Nome: " + Server.patients.get(0).getName());
-                System.out.println("Temparatura corporal: " + Server.patients.get(0).getBodyTemperature());
-                System.out.println("Frequência respiratória: " + Server.patients.get(0).getRespiratoryFrequency());
-                System.out.println("Oxigenação do sangue: " + Server.patients.get(0).getBloodOxygenation());
-                System.out.println("Pressão arterial: " + Server.patients.get(0).getBloodPressure());
-                System.out.println("Frequência cardíaca: " + Server.patients.get(0).getHeartRate());
-                System.out.println("Está em estado grave? " + Server.patients.get(0).isIsSeriousCondition());
-                System.out.println("");
+                System.out.println("> Quantidade de pacientes: " + Server.patients.size());
 
                 /* Finalizando a conexão com o Client. */
                 Server.closeClientConnection(connection);
@@ -118,8 +111,6 @@ public class Server {
             Socket connection
     ) {
         System.out.println("> Processando a requisição");
-
-        System.out.println(httpRequest);
 
         switch (httpRequest.getString("method")) {
             case "GET":
@@ -263,7 +254,7 @@ public class Server {
 
     /**
      * Altera os dados dos sensores de um paciente.
-     * 
+     *
      * @param id String - Identificador único do paciente.
      * @param jsonInfo JSONObject - Novos dados.
      */
