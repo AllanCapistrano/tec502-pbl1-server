@@ -25,9 +25,6 @@ public class Server {
         
         System.out.println("> Iniciando o servidor");
 
-        /* Salvando os números das fichas médicas dos pacientes em uma lista. */
-        Server.saveMedicalRecordNumbersList(Server.medicalRecordNumbers);
-
         try {
             /* Definindo a porta do servidor. */
             Server.server = new ServerSocket(Server.PORT);
@@ -87,10 +84,18 @@ public class Server {
      * @param medicalRecordNumbersList ArrayList<String> - Lista que irá
      * armazenar os números das fichas médicas.
      */
-    private static void saveMedicalRecordNumbersList(
-            ArrayList<String> medicalRecordNumbersList
-    ) {
-        // To Do
+    private static void addPatient(JSONObject patient, String id) {
+        Patient temp = new Patient(
+                patient.getString("name"), 
+                patient.getFloat("bodyTemperatureSensor"), 
+                patient.getFloat("respiratoryFrequencySensor"),
+                patient.getFloat("bloodOxygenationSensor"),
+                patient.getFloat("bloodPressureSensor"),
+                patient.getFloat("heartRateSensor"),
+                id
+        );
+        
+        Server.patients.add(temp);
     }
     
     /**
@@ -109,8 +114,8 @@ public class Server {
         
         switch (httpRequest.getString("method")) {
             case "GET":
-                System.out.println("Método GET");
-                System.out.println("Rota: " + httpRequest.getString("route"));
+                System.out.println("\tMétodo GET");
+                System.out.println("\t\tRota: " + httpRequest.getString("route"));
 
                 switch (httpRequest.getString("route")) {
                     /* Envia a lista de pacientes para o Client. */
@@ -134,8 +139,8 @@ public class Server {
 
                 break;
             case "POST":
-                System.out.println("Método POST");
-                System.out.println("Rota: " + httpRequest.getString("route"));
+                System.out.println("\tMétodo POST");
+                System.out.println("\t\tRota: " + httpRequest.getString("route"));
                 
                 if (httpRequest.getString("route").contains("patients/create/")) {
                     String[] temp = httpRequest.getString("route").split("/");
@@ -146,7 +151,7 @@ public class Server {
                 
                 break;
             case "PUT": //Altera os valores do sensor de um paciente.
-                System.out.println("Método PUT");
+                System.out.println("\tMétodo PUT");
                 break;
         }
         System.out.println("");
