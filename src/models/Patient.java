@@ -11,36 +11,36 @@ public class Patient implements Serializable {
 
     private String name;
     private final String medicalRecordNumber;
-    private float bodyTemperatureSensor;
-    private float respiratoryFrequencySensor;
-    private float bloodOxygenationSensor;
+    private float bodyTemperature;
+    private float respiratoryFrequency;
+    private float bloodOxygenation;
     private float heartRate;
 
     /**
      * Método construtor.
      *
      * @param name String - Nome do paciente.
-     * @param bodyTemperatureSensor float - Valor da temperatura corporal
+     * @param bodyTemperature float - Valor da temperatura corporal registrada 
+     * pelo sensor.
+     * @param respiratoryFrequency float - Valor da frequência respiratória 
      * registrada pelo sensor.
-     * @param respiratoryFrequencySensor float - Valor da frequência
-     * respiratória registrada pelo sensor.
-     * @param bloodOxygenationSensor float - Nível do oxigênio no sangue
-     * registrado pelo sensor.
+     * @param bloodOxygenation float - Nível de oxigênio no sangue registrado 
+     * pelo sensor.
      * @param heartRate float - Frequência cardíaca registrada pelo sensor.
      * @param medicalRecordNumber String - Número da ficha médica do paciente.
      */
     public Patient(
             String name,
-            float bodyTemperatureSensor,
-            float respiratoryFrequencySensor,
-            float bloodOxygenationSensor,
+            float bodyTemperature,
+            float respiratoryFrequency,
+            float bloodOxygenation,
             float heartRate,
             String medicalRecordNumber
     ) {
         this.name = name;
-        this.bodyTemperatureSensor = bodyTemperatureSensor;
-        this.respiratoryFrequencySensor = respiratoryFrequencySensor;
-        this.bloodOxygenationSensor = bloodOxygenationSensor;
+        this.bodyTemperature = bodyTemperature;
+        this.respiratoryFrequency = respiratoryFrequency;
+        this.bloodOxygenation = bloodOxygenation;
         this.heartRate = heartRate;
         this.medicalRecordNumber = medicalRecordNumber;
     }
@@ -71,28 +71,28 @@ public class Patient implements Serializable {
         return medicalRecordNumber;
     }
 
-    public float getBodyTemperatureSensor() {
-        return bodyTemperatureSensor;
+    public float getBodyTemperature() {
+        return bodyTemperature;
     }
 
-    public void setBodyTemperatureSensor(float bodyTemperatureSensor) {
-        this.bodyTemperatureSensor = bodyTemperatureSensor;
+    public void setBodyTemperature(float bodyTemperature) {
+        this.bodyTemperature = bodyTemperature;
     }
 
-    public float getRespiratoryFrequencySensor() {
-        return respiratoryFrequencySensor;
+    public float getRespiratoryFrequency() {
+        return respiratoryFrequency;
     }
 
-    public void setRespiratoryFrequencySensor(float respiratoryFrequencySensor) {
-        this.respiratoryFrequencySensor = respiratoryFrequencySensor;
+    public void setRespiratoryFrequency(float respiratoryFrequency) {
+        this.respiratoryFrequency = respiratoryFrequency;
     }
 
-    public float getBloodOxygenationSensor() {
-        return bloodOxygenationSensor;
+    public float getBloodOxygenation() {
+        return bloodOxygenation;
     }
 
-    public void setBloodOxygenationSensor(float bloodOxygenationSensor) {
-        this.bloodOxygenationSensor = bloodOxygenationSensor;
+    public void setBloodOxygenation(float bloodOxygenation) {
+        this.bloodOxygenation = bloodOxygenation;
     }
 
     public float getHeartRate() {
