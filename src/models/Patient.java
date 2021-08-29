@@ -136,7 +136,7 @@ public class Patient implements Serializable {
         return (this.bodyTemperature > (float) 38.6)
                 || (this.respiratoryFrequency >= 21)
                 || (this.bloodOxygenation < (float) 96)
-                || (this.bloodPressure >= 71)
+                || (this.bloodPressure <= 100)
                 || (this.heartRate >= 111);
     }
 }
