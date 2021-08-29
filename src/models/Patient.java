@@ -16,16 +16,17 @@ public class Patient implements Serializable {
     private float bloodOxygenation;
     private float bloodPressure;
     private float heartRate;
+    private boolean isSeriousCondition;
 
     /**
      * Método construtor.
      *
      * @param name String - Nome do paciente.
-     * @param bodyTemperature float - Valor da temperatura corporal registrada 
+     * @param bodyTemperature float - Valor da temperatura corporal registrada
      * pelo sensor.
-     * @param respiratoryFrequency float - Valor da frequência respiratória 
+     * @param respiratoryFrequency float - Valor da frequência respiratória
      * registrada pelo sensor.
-     * @param bloodOxygenation float - Nível de oxigênio no sangue registrado 
+     * @param bloodOxygenation float - Nível de oxigênio no sangue registrado
      * pelo sensor.
      * @param bloodPressure float - Pressão arterial registrada pelo sensor.
      * @param heartRate float - Frequência cardíaca registrada pelo sensor.
@@ -47,6 +48,8 @@ public class Patient implements Serializable {
         this.bloodPressure = bloodPressure;
         this.heartRate = heartRate;
         this.medicalRecordNumber = medicalRecordNumber;
+
+        this.isSeriousCondition = this.checkPatientCondition();
     }
 
     /**
@@ -113,6 +116,24 @@ public class Patient implements Serializable {
 
     public void setBloodPressure(float bloodPressure) {
         this.bloodPressure = bloodPressure;
+    }
+
+    public boolean isIsSeriousCondition() {
+        return isSeriousCondition;
+    }
+    
+    /**
+     * Verifica se o paciente está em um estado grave com base nos dados dos
+     * sensores.
+     * 
+     * @return boolean
+     */
+    private boolean checkPatientCondition() {
+        return (this.respiratoryFrequency >= (float) 21)
+                || (this.heartRate >= (float) 111)
+                || (this.bloodPressure >= (float) 71)
+                || (this.bodyTemperature > (float) 38.6)
+                || (this.bloodOxygenation < (float) 96);
     }
 
 }
