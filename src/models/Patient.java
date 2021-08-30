@@ -10,7 +10,7 @@ import java.io.Serializable;
 public class Patient implements Serializable {
 
     private String name;
-    private final String medicalRecordNumber;
+    private final String deviceId;
     private float bodyTemperature;
     private int respiratoryFrequency;
     private float bloodOxygenation;
@@ -30,7 +30,7 @@ public class Patient implements Serializable {
      * pelo sensor.
      * @param bloodPressure int - Pressão arterial registrada pelo sensor.
      * @param heartRate int - Frequência cardíaca registrada pelo sensor.
-     * @param medicalRecordNumber String - Número da ficha médica do paciente.
+     * @param deviceId String - Identificador do dispositivo do paciente.
      */
     public Patient(
             String name,
@@ -39,7 +39,7 @@ public class Patient implements Serializable {
             float bloodOxygenation,
             int bloodPressure,
             int heartRate,
-            String medicalRecordNumber
+            String deviceId
     ) {
         this.name = name;
         this.bodyTemperature = bodyTemperature;
@@ -47,7 +47,7 @@ public class Patient implements Serializable {
         this.bloodOxygenation = bloodOxygenation;
         this.bloodPressure = bloodPressure;
         this.heartRate = heartRate;
-        this.medicalRecordNumber = medicalRecordNumber;
+        this.deviceId = deviceId;
 
         this.isSeriousCondition = this.checkPatientCondition();
     }
@@ -63,7 +63,7 @@ public class Patient implements Serializable {
             String medicalRecordNumber
     ) {
         this.name = name;
-        this.medicalRecordNumber = medicalRecordNumber;
+        this.deviceId = medicalRecordNumber;
     }
 
     public String getName() {
@@ -74,8 +74,8 @@ public class Patient implements Serializable {
         this.name = name;
     }
 
-    public String getMedicalRecordNumber() {
-        return medicalRecordNumber;
+    public String getDeviceId() {
+        return deviceId;
     }
 
     public float getBodyTemperature() {
