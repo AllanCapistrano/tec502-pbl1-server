@@ -56,14 +56,14 @@ public class Patient implements Serializable {
      * Método construtor.
      *
      * @param name String - Nome do paciente.
-     * @param medicalRecordNumber String - Número da ficha médica do paciente.
+     * @param deviceId String - Número da ficha médica do paciente.
      */
     public Patient(
             String name,
-            String medicalRecordNumber
+            String deviceId
     ) {
         this.name = name;
-        this.deviceId = medicalRecordNumber;
+        this.deviceId = deviceId;
     }
 
     public String getName() {
