@@ -255,12 +255,12 @@ public class Server {
     /**
      * Altera os dados dos sensores de um paciente.
      *
-     * @param id String - Identificador único do paciente.
+     * @param deviceId String - Identificador único do paciente.
      * @param jsonInfo JSONObject - Novos dados.
      */
-    private static void updatePatient(String id, JSONObject jsonInfo) {
+    private static void updatePatient(String deviceId, JSONObject jsonInfo) {
         for (int i = 0; i < Server.patients.size(); i++) {
-            if (Server.patients.get(i).getMedicalRecordNumber().equals(id)) {
+            if (Server.patients.get(i).getDeviceId().equals(deviceId)) {
                 Server.patients.get(i).setName(
                         jsonInfo.getString("name")
                 );
