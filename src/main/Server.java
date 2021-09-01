@@ -18,8 +18,8 @@ public class Server {
     private static final int PORT = 12244;
     private static ServerSocket server;
 
-    private static final ArrayList<PatientDevice> patients = new ArrayList<>();
-    private static final ArrayList<String> medicalRecordNumbers = new ArrayList<>();
+    private static final ArrayList<PatientDevice> patientDevices = new ArrayList<>();
+    private static final ArrayList<String> deviceIds = new ArrayList<>();
 
     private static ArrayList<ConnectionHandler> connHandler = new ArrayList<>();
     private static ExecutorService pool = Executors.newCachedThreadPool();
@@ -54,8 +54,8 @@ public class Server {
      *
      * @param patient PatientDevice - Dispositivo a ser adicionado.
      */
-    public static void addPatient(PatientDevice patient) {
-        patients.add(patient);
+    public static void addPatientDevice(PatientDevice patient) {
+        patientDevices.add(patient);
     }
 
     /**
@@ -63,8 +63,8 @@ public class Server {
      *
      * @return ArrayList<Patient>
      */
-    public static ArrayList<PatientDevice> getPatientsList() {
-        return patients;
+    public static ArrayList<PatientDevice> getPatientDevicesList() {
+        return patientDevices;
     }
 
     /**
@@ -73,7 +73,7 @@ public class Server {
      * @return ArrayList<String>
      */
     public static ArrayList<String> getDeviceIdsList() {
-        return medicalRecordNumbers;
+        return deviceIds;
     }
 
     /**
@@ -81,8 +81,8 @@ public class Server {
      *
      * @return int
      */
-    public static int patientsListSize() {
-        return patients.size();
+    public static int patientDeviceListSize() {
+        return patientDevices.size();
     }
 
     /**
@@ -91,8 +91,8 @@ public class Server {
      *
      * @return int
      */
-    public static int deviceIdsListSize() {
-        return medicalRecordNumbers.size();
+    public static int deviceIdListSize() {
+        return deviceIds.size();
     }
 
     /**
@@ -101,8 +101,8 @@ public class Server {
      * @param index int - Posição na lista.
      * @return PatientDevice
      */
-    public static PatientDevice getPatient(int index) {
-        return patients.get(index);
+    public static PatientDevice getPatientDevice(int index) {
+        return patientDevices.get(index);
     }
 
     /**
@@ -113,7 +113,7 @@ public class Server {
      * @return String
      */
     public static String getDeviceId(int index) {
-        return medicalRecordNumbers.get(index);
+        return deviceIds.get(index);
     }
 
 }
