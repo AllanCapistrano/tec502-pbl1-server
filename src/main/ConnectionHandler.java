@@ -45,10 +45,12 @@ public class ConnectionHandler implements Runnable {
             /* Finalizando as conexões. */
             input.close();
 //            connection.close();
-        } catch (IOException e) {
-            System.out.println("Erro de Entrada/Saída.");
-        } catch (ClassNotFoundException ex) {
-            System.out.println("Classe String não foi encontrada.");
+        } catch (IOException ioe) {
+            System.err.println("Erro de Entrada/Saída.");
+            System.out.println(ioe);
+        } catch (ClassNotFoundException cnfe) {
+            System.err.println("Classe String não foi encontrada.");
+            System.out.println(cnfe);
         }
     }
 
@@ -149,9 +151,10 @@ public class ConnectionHandler implements Runnable {
             output.writeObject(json);
 
             output.close();
-        } catch (IOException ex) {
-            System.err.println("Erro ao tentar enviar a lista de pacientes. AAA");
-            System.out.println(ex);
+        } catch (IOException ioe) {
+            System.err.println("Erro ao tentar enviar a lista dos dispositivos "
+                    + "dos pacientes.");
+            System.out.println(ioe);
         } 
     }
 
@@ -167,9 +170,10 @@ public class ConnectionHandler implements Runnable {
             output.writeObject(Server.getDeviceIdsList());
 
             output.close();
-        } catch (IOException e) {
-            System.out.println("Erro ao tentar enviar a lista com os "
+        } catch (IOException ioe) {
+            System.err.println("Erro ao tentar enviar a lista com os "
                     + "identificadores dos dispositivos.");
+            System.out.println(ioe);
         }
     }
 

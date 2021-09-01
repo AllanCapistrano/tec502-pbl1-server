@@ -42,10 +42,12 @@ public class Server {
                 pool.execute(connectionThread);
             }
 
-        } catch (BindException e) {
-            System.out.println("A porta já está em uso.");
-        } catch (IOException e) {
-            System.out.println("Erro de Entrada/Saída.");
+        } catch (BindException be) {
+            System.err.println("A porta já está em uso.");
+            System.out.println(be);
+        } catch (IOException ioe) {
+            System.err.println("Erro de Entrada/Saída.");
+            System.out.println(ioe);
         }
     }
 
