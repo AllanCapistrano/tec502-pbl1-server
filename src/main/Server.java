@@ -6,7 +6,7 @@ import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import models.Patient;
+import models.PatientDevice;
 
 /**
  * Classe do servidor.
@@ -18,7 +18,7 @@ public class Server {
     private static final int PORT = 12244;
     private static ServerSocket server;
 
-    private static final ArrayList<Patient> patients = new ArrayList<>();
+    private static final ArrayList<PatientDevice> patients = new ArrayList<>();
     private static final ArrayList<String> medicalRecordNumbers = new ArrayList<>();
 
     private static ArrayList<ConnectionHandler> connHandler = new ArrayList<>();
@@ -52,9 +52,9 @@ public class Server {
     /**
      * Adiciona o dispositivo de um paciente na lista.
      *
-     * @param patient Patient - Dispositivo a ser adicionado.
+     * @param patient PatientDevice - Dispositivo a ser adicionado.
      */
-    public static void addPatient(Patient patient) {
+    public static void addPatient(PatientDevice patient) {
         patients.add(patient);
     }
 
@@ -63,7 +63,7 @@ public class Server {
      *
      * @return ArrayList<Patient>
      */
-    public static ArrayList<Patient> getPatientsList() {
+    public static ArrayList<PatientDevice> getPatientsList() {
         return patients;
     }
 
@@ -99,9 +99,9 @@ public class Server {
      * Retorna o dispositivo de um paciente com base na sua posição na lista.
      *
      * @param index int - Posição na lista.
-     * @return Patient
+     * @return PatientDevice
      */
-    public static Patient getPatient(int index) {
+    public static PatientDevice getPatient(int index) {
         return patients.get(index);
     }
 

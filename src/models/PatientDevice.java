@@ -7,7 +7,7 @@ import java.io.Serializable;
  *
  * @author Allan Capistrano
  */
-public class Patient implements Serializable {
+public class PatientDevice implements Serializable {
 
     private String name;
     private final String deviceId;
@@ -32,7 +32,7 @@ public class Patient implements Serializable {
      * @param heartRate int - Frequência cardíaca registrada pelo sensor.
      * @param deviceId String - Identificador do dispositivo do paciente.
      */
-    public Patient(
+    public PatientDevice(
             String name,
             float bodyTemperature,
             int respiratoryFrequency,
@@ -58,7 +58,7 @@ public class Patient implements Serializable {
      * @param name String - Nome do paciente.
      * @param deviceId String - Número da ficha médica do paciente.
      */
-    public Patient(
+    public PatientDevice(
             String name,
             String deviceId
     ) {

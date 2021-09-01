@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import models.Patient;
+import models.PatientDevice;
 import org.json.JSONObject;
 
 /**
@@ -150,7 +150,7 @@ public class ConnectionHandler implements Runnable {
      * @param deviceId String - Identificador do dispositivo.
      */
     private void addPatientDevice(String deviceId, JSONObject patient) {
-        Patient temp = new Patient(
+        PatientDevice temp = new PatientDevice(
                 patient.getString("name"),
                 patient.getFloat("bodyTemperatureSensor"),
                 patient.getInt("respiratoryFrequencySensor"),
