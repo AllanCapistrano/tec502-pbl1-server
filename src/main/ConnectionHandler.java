@@ -67,20 +67,20 @@ public class ConnectionHandler implements Runnable {
                 System.out.println("\t\tRota: " + httpRequest.getString("route"));
 
                 switch (httpRequest.getString("route")) {
-                    /* Envia a lista de pacientes para o Client. */
+                    /* Envia a lista dos dispositivos dos pacientes. */
                     case "/patients":
                         System.out.println("> Enviando lista de pacientes");
 
-                        this.sendPatientList();
+                        this.sendPatientDevicesList();
 
                         break;
                     /* Envia a lista com os identificadores dos dispositivos 
-                        dos pacientes para o Client. */
+                        dos pacientes. */
                     case "/patients/devices":
                         System.out.println("> Enviando os identificadores dos "
                                 + "dispositivos dos pacientes");
 
-                        this.sendMedicalRecordNumbersList();
+                        this.sendPatientDevicesIdsList();
                         
                         break;
                 }
@@ -113,9 +113,9 @@ public class ConnectionHandler implements Runnable {
     }
 
     /**
-     * Envia a lista de pacientes.
+     * Envia a lista dos dispositivos dos pacientes.
      */
-    private void sendPatientList() {
+    private void sendPatientDevicesList() {
         try {
             JSONObject json = new JSONObject();
             JSONArray jsonArray = new JSONArray();
@@ -155,10 +155,11 @@ public class ConnectionHandler implements Runnable {
         } 
     }
 
+    // COLOCAR NO FORMATO JSON.
     /**
      * Envia uma lista com os identificadores dos dispositivos dos pacientes.
      */
-    private void sendMedicalRecordNumbersList() {
+    private void sendPatientDevicesIdsList() {
         try {
             ObjectOutputStream output
                     = new ObjectOutputStream(connection.getOutputStream());
