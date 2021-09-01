@@ -5,6 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import models.PatientDevice;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -43,7 +44,7 @@ public class ConnectionHandler implements Runnable {
 
             /* Finalizando as conexões. */
             input.close();
-            connection.close();
+//            connection.close();
         } catch (IOException e) {
             System.out.println("Erro de Entrada/Saída.");
         } catch (ClassNotFoundException ex) {
@@ -80,6 +81,8 @@ public class ConnectionHandler implements Runnable {
                                 + "dispositivos dos pacientes");
 
                         this.sendMedicalRecordNumbersList();
+                        
+                        break;
                 }
 
                 break;
@@ -114,15 +117,42 @@ public class ConnectionHandler implements Runnable {
      */
     private void sendPatientList() {
         try {
+            JSONObject json = new JSONObject();
+            JSONArray jsonArray = new JSONArray();
             ObjectOutputStream output
                     = new ObjectOutputStream(connection.getOutputStream());
 
-            output.writeObject(Server.getPatientDevicesList());
+            /* Colocando os dispositivos dos pacientes no formato JSON */
+            for (PatientDevice patientDevice : Server.getPatientDevicesList()) {
+                JSONObject patientDeviceJson = new JSONObject();
+
+                patientDeviceJson.put("deviceId",
+                        patientDevice.getDeviceId());
+                patientDeviceJson.put("name",
+                        patientDevice.getName());
+                patientDeviceJson.put("bodyTemperatureSensor",
+                        patientDevice.getBodyTemperature());
+                patientDeviceJson.put("respiratoryFrequencySensor",
+                        patientDevice.getRespiratoryFrequency());
+                patientDeviceJson.put("bloodOxygenationSensor",
+                        patientDevice.getBloodOxygenation());
+                patientDeviceJson.put("bloodPressureSensor",
+                        patientDevice.getBloodPressure());
+                patientDeviceJson.put("heartRateSensor",
+                        patientDevice.getHeartRate());
+
+                jsonArray.put(patientDeviceJson);
+            }
+
+            json.put("data", jsonArray);
+
+            output.writeObject(json);
 
             output.close();
         } catch (IOException ex) {
-            System.out.println("Erro ao tentar enviar a lista de pacientes.");
-        }
+            System.err.println("Erro ao tentar enviar a lista de pacientes. AAA");
+            System.out.println(ex);
+        } 
     }
 
     /**
