@@ -1,16 +1,15 @@
 package main;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.BindException;
 import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import models.Patient;
-import org.json.JSONObject;
 
 /**
+ * Classe do servidor.
  *
  * @author Allan Capistrano
  */
@@ -18,8 +17,12 @@ public class Server {
 
     private static final int PORT = 12244;
     private static ServerSocket server;
+
     private static final ArrayList<Patient> patients = new ArrayList<>();
     private static final ArrayList<String> medicalRecordNumbers = new ArrayList<>();
+
+    private static ArrayList<ConnectionHandler> connHandler = new ArrayList<>();
+    private static ExecutorService pool = Executors.newCachedThreadPool();
 
     public static void main(String[] args) {
 
@@ -29,260 +32,88 @@ public class Server {
         try {
             /* Definindo a porta do servidor. */
             Server.server = new ServerSocket(Server.PORT);
-            Socket connection;
-            JSONObject received;
-            ObjectInputStream input;
 
             while (true) {
-                /* Permite a conexão com o servidor. */
-                connection = Server.server.accept();
+                /* Serviço que lida com as requisições utilizando threads. */
+                ConnectionHandler connectionThread = new ConnectionHandler(server.accept());
+                connHandler.add(connectionThread);
 
-                input = new ObjectInputStream(connection.getInputStream());
-
-                received = (JSONObject) input.readObject();
-
-                if (received.has("exit") && received.getBoolean("exit")) {
-                    System.out.println("> Encerrando o servidor");
-
-                    break;
-                } else {
-                    Server.processRequests(
-                            received,
-                            connection
-                    );
-                }
-                input.close(); //Talvez criar método.
-
-                System.out.println("> Quantidade de pacientes: " + Server.patients.size());
-
-                /* Finalizando a conexão com o Client. */
-                Server.closeClientConnection(connection);
+                /* Executando as threads. */
+                pool.execute(connectionThread);
             }
 
-            /* Finalizando as conexões. */
-            Server.closeAllConnections(connection, Server.server);
-
-            System.out.println("> Servidor finalizado!");
         } catch (BindException e) {
-            closeServer(Server.server);
-
             System.out.println("A porta já está em uso.");
         } catch (IOException e) {
-            closeServer(Server.server);
-
             System.out.println("Erro de Entrada/Saída.");
-        } catch (ClassNotFoundException ex) {
-            closeServer(Server.server);
-
-            System.out.println("Classe String não foi encontrada.");
-        }
-
-        closeServer(Server.server);
-    }
-
-    /**
-     * Salva o número da ficha médica de todos os pacientes em uma lista.
-     *
-     * @param medicalRecordNumbersList ArrayList<String> - Lista que irá
-     * armazenar os números das fichas médicas.
-     */
-    private static void addPatient(JSONObject patient, String id) {
-        Patient temp = new Patient(
-                patient.getString("name"),
-                patient.getFloat("bodyTemperatureSensor"),
-                patient.getInt("respiratoryFrequencySensor"),
-                patient.getFloat("bloodOxygenationSensor"),
-                patient.getInt("bloodPressureSensor"),
-                patient.getInt("heartRateSensor"),
-                id
-        );
-
-        Server.patients.add(temp);
-    }
-
-    /**
-     * Processa as requisições que são feitas ao servidor.
-     *
-     * @param httpRequest String - Método HTTP enviado pelo Client.
-     * @param connection Socket - Conexão com o Client.
-     */
-    private static void processRequests(
-            JSONObject httpRequest,
-            Socket connection
-    ) {
-        System.out.println("> Processando a requisição");
-
-        switch (httpRequest.getString("method")) {
-            case "GET":
-                System.out.println("\tMétodo GET");
-                System.out.println("\t\tRota: " + httpRequest.getString("route"));
-
-                switch (httpRequest.getString("route")) {
-                    /* Envia a lista de pacientes para o Client. */
-                    case "/patients":
-                        System.out.println("> Enviando lista de pacientes");
-
-                        Server.sendPatientList(connection, Server.patients);
-
-                        break;
-                    /* Envia a lista com o número da ficha médica dos pacientes 
-                        para o Client. */
-                    case "/patients/medical-record-numbers":
-                        System.out.println("> Enviando o número da ficha "
-                                + "médica dos pacientes");
-
-                        Server.sendMedicalRecordNumbersList(
-                                connection,
-                                Server.medicalRecordNumbers
-                        );
-                }
-
-                break;
-            case "POST": // Cria e adiciona o dispositivo do pacinte na lista.
-                System.out.println("\tMétodo POST");
-                System.out.println("\t\tRota: " + httpRequest.getString("route"));
-
-                if (httpRequest.getString("route").contains("patients/create/")) {
-                    String[] temp = httpRequest.getString("route").split("/");
-
-                    Server.addPatient(httpRequest.getJSONObject("body"), temp[2]);
-                }
-
-                break;
-            case "PUT": // Altera os valores do sensor de um paciente.
-                System.out.println("\tMétodo PUT");
-                System.out.println("\t\tRota: " + httpRequest.getString("route"));
-
-                if (httpRequest.getString("route").contains("patients/edit/")) {
-                    String[] temp = httpRequest.getString("route").split("/");
-
-                    Server.updatePatient(temp[2], httpRequest.getJSONObject("body"));
-                }
-
-                break;
-        }
-        System.out.println("");
-    }
-
-    /**
-     * Finaliza o servidor.
-     *
-     * @param server ServerSocket - Servidor que se deseja finalizar.
-     */
-    private static void closeServer(ServerSocket server) {
-        try {
-            server.close();
-        } catch (IOException ex) {
-            System.out.println("Erro ao tentar encerrar o servidor.");
         }
     }
 
     /**
-     * Finaliza a conexão com o Client.
+     * Adiciona o dispositivo de um paciente na lista.
      *
-     * @param connection Socket - Conexão que se deseja finalizar.
+     * @param patient Patient - Dispositivo a ser adicionado.
      */
-    private static void closeClientConnection(Socket connection) {
-        try {
-            connection.close();
-        } catch (IOException ex) {
-            System.out.println("Erro ao tentar finalizar a conexão com o "
-                    + "Client.");
-        }
+    public static void addPatient(Patient patient) {
+        patients.add(patient);
     }
 
     /**
-     * Finaliza todas as conexões as conexões.
+     * Retorna a lista de dispositivos dos pacientes.
      *
-     * @param connection Socket - Conexão que é realizada com o Client.
-     * @param server ServerSocket - Servidor que será finalizado
+     * @return ArrayList<Patient>
      */
-    private static void closeAllConnections(
-            Socket connection,
-            ServerSocket server
-    ) {
-        Server.closeClientConnection(connection);
-        Server.closeServer(server);
+    public static ArrayList<Patient> getPatientsList() {
+        return patients;
     }
 
     /**
-     * Envia a lista de pacientes para o Client.
+     * Retorna a lista de identificadores dos dispositivos dos pacientes.
      *
-     * @param connection Socket- Conexão que é realizada com o Client.
-     * @param patients ArrayList<Patient> - Lista de pacientes.
+     * @return ArrayList<String>
      */
-    private static void sendPatientList(
-            Socket connection,
-            ArrayList<Patient> patients
-    ) {
-        try {
-            ObjectOutputStream output
-                    = new ObjectOutputStream(connection.getOutputStream());
-
-            output.writeObject(patients);
-
-            output.close(); //Talvez criar método.
-        } catch (IOException ex) {
-            System.out.println("Erro ao tentar enviar a lista de pacientes "
-                    + "para o Client.");
-        }
+    public static ArrayList<String> getDeviceIdsList() {
+        return medicalRecordNumbers;
     }
 
     /**
-     * Envia uma lista com o número da ficha médica dos pacientes para o Client.
+     * Retorna o tamanho da lista de dispositivos dos pacientes.
      *
-     * @param connection Socket- Conexão que é realizada com o Client.
-     * @param medicalRecordNumbers ArrayList<String> - Lista que contém o número
-     * da ficha médica dos pacientes.
+     * @return int
      */
-    private static void sendMedicalRecordNumbersList(
-            Socket connection,
-            ArrayList<String> medicalRecordNumbers
-    ) {
-        try {
-            ObjectOutputStream output
-                    = new ObjectOutputStream(connection.getOutputStream());
-
-            output.writeObject(medicalRecordNumbers);
-
-            output.close(); //Talvez criar método.
-        } catch (IOException e) {
-            System.out.println("Erro ao tentar enviar a lista com o número da "
-                    + "ficha médica dos pacientes para o Client.");
-        }
+    public static int patientsListSize() {
+        return patients.size();
     }
 
     /**
-     * Altera os dados dos sensores de um paciente.
+     * Retorna o tamanho da lista de identificadores dos dispositivos dos
+     * pacientes.
      *
-     * @param deviceId String - Identificador único do paciente.
-     * @param jsonInfo JSONObject - Novos dados.
+     * @return int
      */
-    private static void updatePatient(String deviceId, JSONObject jsonInfo) {
-        for (int i = 0; i < Server.patients.size(); i++) {
-            if (Server.patients.get(i).getDeviceId().equals(deviceId)) {
-                Server.patients.get(i).setName(
-                        jsonInfo.getString("name")
-                );
-                Server.patients.get(i).setBodyTemperature(
-                        jsonInfo.getFloat("bodyTemperatureSensor")
-                );
-                Server.patients.get(i).setRespiratoryFrequency(
-                        jsonInfo.getInt("respiratoryFrequencySensor")
-                );
-                Server.patients.get(i).setBloodOxygenation(
-                        jsonInfo.getFloat("bloodOxygenationSensor")
-                );
-                Server.patients.get(i).setBloodPressure(
-                        jsonInfo.getInt("bloodPressureSensor")
-                );
-                Server.patients.get(i).setHeartRate(
-                        jsonInfo.getInt("heartRateSensor")
-                );
-                Server.patients.get(i).setIsSeriousCondition(
-                        Server.patients.get(i).checkPatientCondition()
-                );
-            }
-        }
+    public static int deviceIdsListSize() {
+        return medicalRecordNumbers.size();
     }
+
+    /**
+     * Retorna o dispositivo de um paciente com base na sua posição na lista.
+     *
+     * @param index int - Posição na lista.
+     * @return Patient
+     */
+    public static Patient getPatient(int index) {
+        return patients.get(index);
+    }
+
+    /**
+     * Retorna o identificador do dispositivo de um paciente com base na sua
+     * posição na lista.
+     *
+     * @param index int - Posição na lista.
+     * @return String
+     */
+    public static String getDeviceId(int index) {
+        return medicalRecordNumbers.get(index);
+    }
+
 }
