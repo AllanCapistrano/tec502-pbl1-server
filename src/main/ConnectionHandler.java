@@ -39,12 +39,7 @@ public class ConnectionHandler implements Runnable {
             /* Processandos a requisição. */
             this.processRequests(this.received);
 
-            System.out.println("> Quantidade de dispositivos conectados: " + Server.patients.size());
-
-            /* TEMPORÁRIO */
-            for (int y = 0; y < Server.patients.size(); y++) {
-                System.out.println(Server.patients.get(y).getName());
-            }
+            System.out.println("> Quantidade de dispositivos conectados: " + Server.patientsListSize());
 
             /* Finalizando as conexões. */
             input.close();
@@ -122,7 +117,7 @@ public class ConnectionHandler implements Runnable {
             ObjectOutputStream output
                     = new ObjectOutputStream(connection.getOutputStream());
 
-            output.writeObject(Server.patients);
+            output.writeObject(Server.getPatientsList());
 
             output.close();
         } catch (IOException ex) {
@@ -138,7 +133,7 @@ public class ConnectionHandler implements Runnable {
             ObjectOutputStream output
                     = new ObjectOutputStream(connection.getOutputStream());
 
-            output.writeObject(Server.medicalRecordNumbers);
+            output.writeObject(Server.getDeviceIdsList());
 
             output.close();
         } catch (IOException e) {
@@ -165,7 +160,7 @@ public class ConnectionHandler implements Runnable {
                 deviceId
         );
 
-        Server.patients.add(temp); //ALTERAR.
+        Server.addPatient(temp);
     }
 
     /**
@@ -175,28 +170,28 @@ public class ConnectionHandler implements Runnable {
      * @param jsonInfo JSONObject - Novos dados.
      */
     private void updatePatientDevice(String deviceId, JSONObject jsonInfo) {
-        for (int i = 0; i < Server.patients.size(); i++) {
-            if (Server.patients.get(i).getDeviceId().equals(deviceId)) {
-                Server.patients.get(i).setName(
+        for (int i = 0; i < Server.patientsListSize(); i++) {
+            if (Server.getPatient(i).getDeviceId().equals(deviceId)) {
+                Server.getPatient(i).setName(
                         jsonInfo.getString("name")
                 );
-                Server.patients.get(i).setBodyTemperature(
+                Server.getPatient(i).setBodyTemperature(
                         jsonInfo.getFloat("bodyTemperatureSensor")
                 );
-                Server.patients.get(i).setRespiratoryFrequency(
+                Server.getPatient(i).setRespiratoryFrequency(
                         jsonInfo.getInt("respiratoryFrequencySensor")
                 );
-                Server.patients.get(i).setBloodOxygenation(
+                Server.getPatient(i).setBloodOxygenation(
                         jsonInfo.getFloat("bloodOxygenationSensor")
                 );
-                Server.patients.get(i).setBloodPressure(
+                Server.getPatient(i).setBloodPressure(
                         jsonInfo.getInt("bloodPressureSensor")
                 );
-                Server.patients.get(i).setHeartRate(
+                Server.getPatient(i).setHeartRate(
                         jsonInfo.getInt("heartRateSensor")
                 );
-                Server.patients.get(i).setIsSeriousCondition(
-                        Server.patients.get(i).checkPatientCondition()
+                Server.getPatient(i).setIsSeriousCondition(
+                        Server.getPatient(i).checkPatientCondition()
                 );
             }
         }
