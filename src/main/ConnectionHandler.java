@@ -60,8 +60,7 @@ public class ConnectionHandler implements Runnable {
      * @param httpRequest JSONObject - Requisição HTTP.
      */
     private void processRequests(JSONObject httpRequest) {
-        System.out.println("> Processando a requisição enviada por "
-                + connection.getRemoteSocketAddress());
+        System.out.println("> Processando a requisição");
 
         switch (httpRequest.getString("method")) {
             case "GET": // Envia dados.
