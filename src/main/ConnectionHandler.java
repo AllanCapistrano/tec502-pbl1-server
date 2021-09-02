@@ -123,6 +123,8 @@ public class ConnectionHandler implements Runnable {
             JSONArray jsonArray = new JSONArray();
             ObjectOutputStream output
                     = new ObjectOutputStream(connection.getOutputStream());
+            
+            json.put("statusCode", 200);
 
             /* Colocando os dispositivos dos pacientes no formato JSON */
             for (PatientDevice patientDevice : Server.getPatientDevicesList()) {
