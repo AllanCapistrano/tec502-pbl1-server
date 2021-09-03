@@ -1,11 +1,8 @@
 # tec502-pbl1-server
 
-<h3 align="center">Título da imagem</h3>
 <p align="center">
-  <img src=" alt="Sample Text" width="700px" height="350">
+  <img src="https://i.imgur.com/grOHu0a.gif" alt="Sample Text" width="600px" height="400px">
 </p>
-
-------------
 
 ## 📖 Descrição do Projeto ##
 > **Resolução do problema 1 do MI - Concorrência e Conectividade (TEC 502).**<br/><br/>
