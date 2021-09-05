@@ -49,7 +49,7 @@ public class ConnectionHandler implements Runnable {
             System.err.println("Erro de Entrada/Saída.");
             System.out.println(ioe);
         } catch (ClassNotFoundException cnfe) {
-            System.err.println("Classe String não foi encontrada.");
+            System.err.println("Classe JSONObject não foi encontrada.");
             System.out.println(cnfe);
         }
     }
