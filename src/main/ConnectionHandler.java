@@ -44,7 +44,7 @@ public class ConnectionHandler implements Runnable {
 
             /* Finalizando as conexões. */
             input.close();
-//            connection.close();
+            connection.close();
         } catch (IOException ioe) {
             System.err.println("Erro de Entrada/Saída.");
             System.out.println(ioe);
