@@ -2,6 +2,7 @@ package main;
 
 import java.io.IOException;
 import java.net.BindException;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
@@ -20,12 +21,20 @@ public class Server {
     private static ServerSocket server;
     private static final String IP_ADDRESS = "localhost";
     private static final int PORT = 12244;
+    
+    /* Test */
+    private static DatagramSocket serverUdp;
+    private static final int PORT_UDP = 15000;
 
     private static final ArrayList<PatientDevice> patientDevices = new ArrayList<>();
     private static final ArrayList<String> deviceIds = new ArrayList<>();
 
     private static ArrayList<ConnectionHandler> connHandler = new ArrayList<>();
     private static ExecutorService pool = Executors.newCachedThreadPool();
+    
+    /* Tests */
+    private static ArrayList<ConnectionHandlerUdp> connHandlerUdp = new ArrayList<>();
+    private static ExecutorService poolUdp = Executors.newCachedThreadPool();
 
     public static void main(String[] args) {
 
@@ -38,14 +47,25 @@ public class Server {
             InetAddress addr = InetAddress.getByName(IP_ADDRESS);
             InetSocketAddress inetSocket = new InetSocketAddress(addr, PORT);
             server.bind(inetSocket);
+            
+            serverUdp = new DatagramSocket(PORT_UDP, addr);
 
             while (true) {
                 /* Serviço que lida com as requisições utilizando threads. */
                 ConnectionHandler connectionThread = new ConnectionHandler(server.accept());
                 connHandler.add(connectionThread);
+                
+                /* Test UDP */
+                ConnectionHandlerUdp connectionThreadUdp = new ConnectionHandlerUdp(serverUdp);
+                connHandlerUdp.add(connectionThreadUdp);
+                
+                /* Test poll UDP */
+                poolUdp.execute(connectionThreadUdp);
 
                 /* Executando as threads. */
                 pool.execute(connectionThread);
+                
+                
             }
 
         } catch (BindException be) {
