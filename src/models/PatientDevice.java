@@ -17,7 +17,7 @@ public class PatientDevice implements Serializable {
     private int bloodPressure;
     private int heartRate;
     private boolean isSeriousCondition;
-    private float patientSeverityLevel;
+    private final float patientSeverityLevel;
 
     /**
      * Método construtor.
@@ -52,20 +52,6 @@ public class PatientDevice implements Serializable {
 
         this.isSeriousCondition = this.checkPatientCondition();
         this.patientSeverityLevel = this.calculatePatientSeverityLevel();
-    }
-
-    /**
-     * Método construtor.
-     *
-     * @param name String - Nome do paciente.
-     * @param deviceId String - Número da ficha médica do paciente.
-     */
-    public PatientDevice(
-            String name,
-            String deviceId
-    ) {
-        this.name = name;
-        this.deviceId = deviceId;
     }
 
     public String getName() {
@@ -148,7 +134,7 @@ public class PatientDevice implements Serializable {
 
     /**
      * Média ponderada para determinar o nível de gravidade dos pacientes que
-     * estão em uma condição crítica.
+     * estão em um estado crítico.
      *
      * @return float
      */

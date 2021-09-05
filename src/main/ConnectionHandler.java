@@ -15,8 +15,8 @@ import org.json.JSONObject;
  */
 public class ConnectionHandler implements Runnable {
 
-    private Socket connection;
-    private ObjectInputStream input;
+    private final Socket connection;
+    private final ObjectInputStream input;
     private JSONObject received;
 
     /**
@@ -40,7 +40,8 @@ public class ConnectionHandler implements Runnable {
             /* Processandos a requisição. */
             this.processRequests(this.received);
 
-            System.out.println("> Quantidade de dispositivos conectados: " + Server.patientDeviceListSize());
+            System.out.println("> Quantidade de dispositivos conectados: "
+                    + Server.patientDeviceListSize());
 
             /* Finalizando as conexões. */
             input.close();
@@ -55,7 +56,7 @@ public class ConnectionHandler implements Runnable {
     }
 
     /**
-     * Processa as requisições que são feitas ao servidor.
+     * Processa as requisições que são enviados ao servidor.
      *
      * @param httpRequest JSONObject - Requisição HTTP.
      */
@@ -74,15 +75,6 @@ public class ConnectionHandler implements Runnable {
 
                         this.sendPatientDevicesList();
 
-                        break;
-                    /* Envia a lista com os identificadores dos dispositivos 
-                        dos pacientes. */
-                    case "/patients/devices":
-                        System.out.println("> Enviando os identificadores dos "
-                                + "dispositivos dos pacientes");
-
-                        this.sendPatientDevicesIdsList();
-                        
                         break;
                 }
 
@@ -122,7 +114,7 @@ public class ConnectionHandler implements Runnable {
             JSONArray jsonArray = new JSONArray();
             ObjectOutputStream output
                     = new ObjectOutputStream(connection.getOutputStream());
-            
+
             json.put("statusCode", 200);
 
             /* Colocando os dispositivos dos pacientes no formato JSON */
@@ -156,25 +148,6 @@ public class ConnectionHandler implements Runnable {
             System.err.println("Erro ao tentar enviar a lista dos dispositivos "
                     + "dos pacientes.");
             System.out.println(ioe);
-        } 
-    }
-
-    // COLOCAR NO FORMATO JSON.
-    /**
-     * Envia uma lista com os identificadores dos dispositivos dos pacientes.
-     */
-    private void sendPatientDevicesIdsList() {
-        try {
-            ObjectOutputStream output
-                    = new ObjectOutputStream(connection.getOutputStream());
-
-            output.writeObject(Server.getDeviceIdsList());
-
-            output.close();
-        } catch (IOException ioe) {
-            System.err.println("Erro ao tentar enviar a lista com os "
-                    + "identificadores dos dispositivos.");
-            System.out.println(ioe);
         }
     }
 
@@ -200,9 +173,9 @@ public class ConnectionHandler implements Runnable {
     }
 
     /**
-     * Altera os valores dos sensores do dispositivo de um paciente.
+     * Atualiza os valores dos sensores do dispositivo de um paciente.
      *
-     * @param deviceId String - Identificador único do paciente.
+     * @param deviceId String - Identificador único do dispositivo do paciente.
      * @param jsonInfo JSONObject - Novos dados.
      */
     private void updatePatientDevice(String deviceId, JSONObject jsonInfo) {
