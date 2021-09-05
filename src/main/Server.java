@@ -2,6 +2,8 @@ package main;
 
 import java.io.IOException;
 import java.net.BindException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
@@ -9,14 +11,15 @@ import java.util.concurrent.Executors;
 import models.PatientDevice;
 
 /**
- * Classe do servidor.
+ * Classe do Server.
  *
  * @author Allan Capistrano
  */
 public class Server {
 
-    private static final int PORT = 12244;
     private static ServerSocket server;
+    private static final String IP_ADDRESS = "localhost";
+    private static final int PORT = 12244;
 
     private static final ArrayList<PatientDevice> patientDevices = new ArrayList<>();
     private static final ArrayList<String> deviceIds = new ArrayList<>();
@@ -31,7 +34,10 @@ public class Server {
 
         try {
             /* Definindo a porta do servidor. */
-            Server.server = new ServerSocket(Server.PORT);
+            Server.server = new ServerSocket();
+            InetAddress addr = InetAddress.getByName(IP_ADDRESS);
+            InetSocketAddress inetSocket = new InetSocketAddress(addr, PORT);
+            server.bind(inetSocket);
 
             while (true) {
                 /* Serviço que lida com as requisições utilizando threads. */
