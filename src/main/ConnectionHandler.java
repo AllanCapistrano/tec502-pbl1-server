@@ -179,30 +179,36 @@ public class ConnectionHandler implements Runnable {
      * @param jsonInfo JSONObject - Novos dados.
      */
     private void updatePatientDevice(String deviceId, JSONObject jsonInfo) {
-        for (int i = 0; i < Server.patientDeviceListSize(); i++) {
+        int i;
+
+        for (i = 0; i < Server.patientDeviceListSize(); i++) {
             if (Server.getPatientDevice(i).getDeviceId().equals(deviceId)) {
-                Server.getPatientDevice(i).setName(
-                        jsonInfo.getString("name")
-                );
-                Server.getPatientDevice(i).setBodyTemperature(
-                        jsonInfo.getFloat("bodyTemperatureSensor")
-                );
-                Server.getPatientDevice(i).setRespiratoryFrequency(
-                        jsonInfo.getInt("respiratoryFrequencySensor")
-                );
-                Server.getPatientDevice(i).setBloodOxygenation(
-                        jsonInfo.getFloat("bloodOxygenationSensor")
-                );
-                Server.getPatientDevice(i).setBloodPressure(
-                        jsonInfo.getInt("bloodPressureSensor")
-                );
-                Server.getPatientDevice(i).setHeartRate(
-                        jsonInfo.getInt("heartRateSensor")
-                );
-                Server.getPatientDevice(i).setIsSeriousCondition(
-                        Server.getPatientDevice(i).checkPatientCondition()
-                );
+                break;
             }
+        }
+
+        if (i == Server.patientDeviceListSize()) {
+            this.addPatientDevice(deviceId, jsonInfo);
+        } else {
+            Server.getPatientDevice(i).setName(jsonInfo.getString("name"));
+            Server.getPatientDevice(i).setBodyTemperature(
+                    jsonInfo.getFloat("bodyTemperatureSensor")
+            );
+            Server.getPatientDevice(i).setRespiratoryFrequency(
+                    jsonInfo.getInt("respiratoryFrequencySensor")
+            );
+            Server.getPatientDevice(i).setBloodOxygenation(
+                    jsonInfo.getFloat("bloodOxygenationSensor")
+            );
+            Server.getPatientDevice(i).setBloodPressure(
+                    jsonInfo.getInt("bloodPressureSensor")
+            );
+            Server.getPatientDevice(i).setHeartRate(
+                    jsonInfo.getInt("heartRateSensor")
+            );
+            Server.getPatientDevice(i).setIsSeriousCondition(
+                    Server.getPatientDevice(i).checkPatientCondition()
+            );
         }
     }
 }
