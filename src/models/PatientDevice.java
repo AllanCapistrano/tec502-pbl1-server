@@ -148,7 +148,7 @@ public class PatientDevice implements Serializable {
             return (this.bodyTemperature * 2
                     + this.respiratoryFrequency * 2
                     + (100 - this.bloodOxygenation)
-                    + (150 - this.bloodPressure)
+                    + (190 - this.bloodPressure)
                     + this.heartRate) / (2 + 2 + 4 + 1 + 1);
         }
 
