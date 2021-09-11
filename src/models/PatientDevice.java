@@ -17,6 +17,7 @@ public class PatientDevice implements Serializable {
     private int bloodPressure;
     private int heartRate;
     private boolean isSeriousCondition;
+    private final String isSeriousConditionLabel;
     private final float patientSeverityLevel;
 
     /**
@@ -52,6 +53,8 @@ public class PatientDevice implements Serializable {
 
         this.isSeriousCondition = this.checkPatientCondition();
         this.patientSeverityLevel = this.calculatePatientSeverityLevel();
+
+        this.isSeriousConditionLabel = this.checkPatientCondition() ? "Sim" : "Não";
     }
 
     public String getName() {
@@ -116,6 +119,10 @@ public class PatientDevice implements Serializable {
 
     public float getPatientSeverityLevel() {
         return patientSeverityLevel;
+    }
+
+    public String getIsSeriousConditionLabel() {
+        return isSeriousConditionLabel;
     }
 
     /**
