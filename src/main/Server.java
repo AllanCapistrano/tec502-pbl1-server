@@ -6,6 +6,8 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import models.PatientDevice;
@@ -21,8 +23,10 @@ public class Server {
     private static final String IP_ADDRESS = "localhost";
     private static final int PORT = 12244;
 
-    private static final ArrayList<PatientDevice> patientDevices = new ArrayList<>();
-    private static final ArrayList<String> deviceIds = new ArrayList<>();
+    private static final List<PatientDevice> patientDevices
+            = Collections.synchronizedList(new ArrayList());
+    private static final List<String> deviceIds
+            = Collections.synchronizedList(new ArrayList());
 
     private static ArrayList<ConnectionHandler> connHandler = new ArrayList<>();
     private static ExecutorService pool = Executors.newCachedThreadPool();
@@ -69,18 +73,18 @@ public class Server {
     /**
      * Retorna a lista de dispositivos dos pacientes.
      *
-     * @return ArrayList<Patient>
+     * @return List<PatientDevice>
      */
-    public static ArrayList<PatientDevice> getPatientDevicesList() {
+    public static List<PatientDevice> getPatientDevicesList() {
         return patientDevices;
     }
 
     /**
      * Retorna a lista de identificadores dos dispositivos dos pacientes.
      *
-     * @return ArrayList<String>
+     * @return List<String>
      */
-    public static ArrayList<String> getDeviceIdsList() {
+    public static List<String> getDeviceIdsList() {
         return deviceIds;
     }
 
