@@ -16,7 +16,7 @@ public class ComparePatients implements Comparator<PatientDevice> {
         if (pd1.getPatientSeverityLevel() > pd2.getPatientSeverityLevel()) {
             /* Coloca o mais a esquerda da lista. */
             return -1;
-        } else if (pd1.getPatientSeverityLevel() > pd2.getPatientSeverityLevel()) {
+        } else if (pd1.getPatientSeverityLevel() < pd2.getPatientSeverityLevel()) {
             /* Coloca o mais a direita da lista. */
             return 1;
         }
