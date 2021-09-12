@@ -25,8 +25,6 @@ public class Server {
 
     private static final List<PatientDevice> patientDevices
             = Collections.synchronizedList(new ArrayList());
-    private static final List<String> deviceIds
-            = Collections.synchronizedList(new ArrayList());
 
     private static ArrayList<ConnectionHandler> connHandler = new ArrayList<>();
     private static ExecutorService pool = Executors.newCachedThreadPool();
@@ -80,31 +78,12 @@ public class Server {
     }
 
     /**
-     * Retorna a lista de identificadores dos dispositivos dos pacientes.
-     *
-     * @return List<String>
-     */
-    public static List<String> getDeviceIdsList() {
-        return deviceIds;
-    }
-
-    /**
      * Retorna o tamanho da lista de dispositivos dos pacientes.
      *
      * @return int
      */
     public static int patientDeviceListSize() {
         return patientDevices.size();
-    }
-
-    /**
-     * Retorna o tamanho da lista de identificadores dos dispositivos dos
-     * pacientes.
-     *
-     * @return int
-     */
-    public static int deviceIdListSize() {
-        return deviceIds.size();
     }
 
     /**
@@ -116,16 +95,4 @@ public class Server {
     public static PatientDevice getPatientDevice(int index) {
         return patientDevices.get(index);
     }
-
-    /**
-     * Retorna o identificador do dispositivo de um paciente com base na sua
-     * posição na lista.
-     *
-     * @param index int - Posição na lista.
-     * @return String
-     */
-    public static String getDeviceId(int index) {
-        return deviceIds.get(index);
-    }
-
 }
