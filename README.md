@@ -7,12 +7,13 @@
 ## 📖 Descrição do Projeto ##
 > **Resolução do problema 1 do MI - Concorrência e Conectividade (TEC 502).**<br/><br/>
 O projeto trata-se de um servidor (utilizando [ServerSocket](https://docs.oracle.com/javase/7/docs/api/java/net/ServerSocket.html)) que recebe requisições [HTTP](https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Methods) no formato [JSON](https://www.json.org/json-en.html), e devolve respostas nesse mesmo formato. <br/>
-Este servidor permite múltiplas conexões com os *clients*, onde cada conexão é processada por uma *thread* diferente. Existem dois tipos de **client**, um que emula um dispositivo que possui diversos sensores acoplados, e outro que seria utilizado pelos médicos para o monitoramento dos pacientes que estão com suspeita de COVID-19.
+Este servidor permite múltiplas conexões com os *clients*, onde cada conexão é processada por uma *thread* diferente. Existem dois tipos de *client*, um que emula um dispositivo que possui diversos sensores acoplados, e outro que seria utilizado pelos médicos para o monitoramento dos pacientes que estão com suspeita de COVID-19.
 
 ### ⛵ Navegação pelos projetos: ###
 - \> Servidor
 - [Emulador de Sensores](https://github.com/AllanCapistrano/tec502-pbl1-sensors)
 - [Monitoramento de Pacientes](https://github.com/AllanCapistrano/tec502-pbl1-monitoring)
+- [API REST](https://github.com/AllanCapistrano/tec502-pbl1-api)
 
 ### 📂 Tecnologias utilizadas: ###
 - [Java JDK 8](https://www.oracle.com/br/java/technologies/javase/javase-jdk8-downloads.html)
