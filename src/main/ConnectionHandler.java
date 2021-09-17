@@ -5,8 +5,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import models.PatientDevice;
-import org.json.JSONArray;
 import org.json.JSONObject;
+import utils.FileHandle;
+import utils.PatientToJson;
 
 /**
  * Classe que lida com as requisições enviadas para o servidor.
@@ -15,6 +16,8 @@ import org.json.JSONObject;
  */
 public class ConnectionHandler implements Runnable {
 
+    private static final String FILE_PATH = "patients.json";
+    
     private final Socket connection;
     private final ObjectInputStream input;
     private JSONObject received;
@@ -110,36 +113,12 @@ public class ConnectionHandler implements Runnable {
      */
     private void sendPatientDevicesList() {
         try {
-            JSONObject json = new JSONObject();
-            JSONArray jsonArray = new JSONArray();
             ObjectOutputStream output
                     = new ObjectOutputStream(connection.getOutputStream());
 
-            json.put("statusCode", 200);
-
-            /* Colocando os dispositivos dos pacientes no formato JSON */
-            for (PatientDevice patientDevice : Server.getPatientDevicesList()) {
-                JSONObject patientDeviceJson = new JSONObject();
-
-                patientDeviceJson.put("deviceId",
-                        patientDevice.getDeviceId());
-                patientDeviceJson.put("name",
-                        patientDevice.getName());
-                patientDeviceJson.put("bodyTemperatureSensor",
-                        patientDevice.getBodyTemperature());
-                patientDeviceJson.put("respiratoryFrequencySensor",
-                        patientDevice.getRespiratoryFrequency());
-                patientDeviceJson.put("bloodOxygenationSensor",
-                        patientDevice.getBloodOxygenation());
-                patientDeviceJson.put("bloodPressureSensor",
-                        patientDevice.getBloodPressure());
-                patientDeviceJson.put("heartRateSensor",
-                        patientDevice.getHeartRate());
-
-                jsonArray.put(patientDeviceJson);
-            }
-
-            json.put("data", jsonArray);
+            /* Colocando a lista de pacientes no formato JSON. */
+            JSONObject json
+                    = PatientToJson.handle(Server.getPatientDevicesList(), true);
 
             output.writeObject(json);
 
@@ -170,6 +149,13 @@ public class ConnectionHandler implements Runnable {
         );
 
         Server.addPatientDevice(temp);
+
+        /* Colocando a lista de pacientes no formato JSON. */
+        JSONObject json
+                = PatientToJson.handle(Server.getPatientDevicesList(), false);
+
+        /* Escrevendo no arquivo. */
+        FileHandle.write(FILE_PATH, json.toString(), false);
     }
 
     /**
@@ -210,5 +196,12 @@ public class ConnectionHandler implements Runnable {
                     Server.getPatientDevice(i).checkPatientCondition()
             );
         }
+
+        /* Colocando a lista de pacientes no formato JSON. */
+        JSONObject json
+                = PatientToJson.handle(Server.getPatientDevicesList(), false);
+
+        /* Escrevendo no arquivo. */
+        FileHandle.write(FILE_PATH, json.toString(), false);
     }
 }
