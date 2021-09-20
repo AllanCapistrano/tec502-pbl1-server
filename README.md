@@ -24,6 +24,10 @@ Este servidor permite múltiplas conexões com os *clients*, onde cada conexão 
 ------------
 
 ## 💻 Como utilizar ##
+Para o utilizar este projeto é necessário ter instalado o JDK 8u111.
+
+- [JDK 8u111 com Netbeans 8.2](https://www.oracle.com/technetwork/java/javase/downloads/jdk-netbeans-jsp-3413139-esa.html)
+- [JDK 8u111](https://www.oracle.com/br/java/technologies/javase/javase8-archive-downloads.html)
 
 ### Através de uma IDE ###
 Caso esteja utilizando alguma IDE, basta **executar o projeto**, por exemplo, utilizando o *NetBeans IDE 8.2* aperte o botão `F6`; <br/>
